@@ -1,6 +1,6 @@
 module.exports.models = {
 
-  migrate: 'safe',
+  migrate: 'alter',
   attributes: {
     createdAt: {
       type: 'number',
@@ -11,9 +11,18 @@ module.exports.models = {
       autoUpdatedAt: true,
     },
     id: {
-      type: 'number',
-      autoIncrement: true,
+      type: 'string',
+      required: true,
     },
+  },
+
+  // Callback de cycle de vie pour générer des ULID avant la création
+  beforeCreate: function (values, proceed) {
+    const { ulid } = require('ulid');
+    if (!values.id) {
+      values.id = ulid();
+    }
+    return proceed();
   },
 
   dataEncryptionKeys: {
