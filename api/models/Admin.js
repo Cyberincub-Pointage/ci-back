@@ -62,15 +62,7 @@ module.exports = {
     }
   },
 
-  // Lifecycle callback pour générer un ULID avant la création
-  beforeCreate: function (values, proceed) {
-    const { ulid } = require('ulid');
-    if (!values.id) {
-      values.id = ulid();
-    }
-    return proceed();
-  },
-
+  // Lifecycle avant la création
   customToJSON: function () {
     return _.omit(this, ['password']);
   }

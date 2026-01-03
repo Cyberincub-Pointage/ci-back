@@ -1,5 +1,6 @@
+const { ulid } = require('ulid');
+
 module.exports.bootstrap = async function () {
-  const { ulid } = require('ulid');
 
   // Set global appUrl based on environment
   sails.config.custom.appUrl = sails.config.environment === 'production'

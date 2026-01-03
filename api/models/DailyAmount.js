@@ -16,13 +16,4 @@ module.exports = {
       description: 'The admin who set this amount.'
     },
   },
-
-  // Lifecycle callback pour générer un ULID avant la création
-  beforeCreate: function (values, proceed) {
-    const { ulid } = require('ulid');
-    if (!values.id) {
-      values.id = ulid();
-    }
-    return proceed();
-  }
 };
