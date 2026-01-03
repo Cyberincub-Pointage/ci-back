@@ -24,7 +24,9 @@ module.exports = {
 
   },
 
-  sockets: {},
+  sockets: {
+    onlyAllowOrigins: ['https://ci-back-staging.onrender.com'],
+  },
 
   log: {
     level: 'debug'
