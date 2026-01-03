@@ -108,6 +108,16 @@ module.exports = {
       description: 'Equipe en attente de validation.'
     }
   },
+
+  // Lifecycle callback pour générer un ULID avant la création
+  beforeCreate: function (values, proceed) {
+    const { ulid } = require('ulid');
+    if (!values.id) {
+      values.id = ulid();
+    }
+    return proceed();
+  },
+
   customToJSON: function () {
     return _.omit(this, ['password']);
   }

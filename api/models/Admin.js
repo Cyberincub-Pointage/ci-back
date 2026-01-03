@@ -61,6 +61,16 @@ module.exports = {
       description: 'L\'URL de la photo de profil de l\'administrateur.'
     }
   },
+
+  // Lifecycle callback pour générer un ULID avant la création
+  beforeCreate: function (values, proceed) {
+    const { ulid } = require('ulid');
+    if (!values.id) {
+      values.id = ulid();
+    }
+    return proceed();
+  },
+
   customToJSON: function () {
     return _.omit(this, ['password']);
   }

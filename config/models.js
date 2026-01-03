@@ -16,14 +16,14 @@ module.exports.models = {
     },
   },
 
-  // Callback de cycle de vie pour générer des ULID avant la création
-  beforeCreate: function (values, proceed) {
-    const { ulid } = require('ulid');
-    if (!values.id) {
-      values.id = ulid();
-    }
-    return proceed();
-  },
+  // // Callback de cycle de vie pour générer des ULID avant la création
+  // beforeCreate: function (values, proceed) {
+  //   const { ulid } = require('ulid');
+  //   if (!values.id) {
+  //     values.id = ulid();
+  //   }
+  //   return proceed();
+  // },
 
   dataEncryptionKeys: {
     default: 'pMICFoNa97LtXpn14tQv05W2p3xo5FjQQ93VFIMHglY='

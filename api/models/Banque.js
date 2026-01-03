@@ -11,5 +11,14 @@ module.exports = {
       unique: true,
       description: 'Le code unique identifiant la banque.'
     }
+  },
+
+  // Lifecycle callback pour générer un ULID avant la création
+  beforeCreate: function (values, proceed) {
+    const { ulid } = require('ulid');
+    if (!values.id) {
+      values.id = ulid();
+    }
+    return proceed();
   }
 };
