@@ -4,7 +4,7 @@ module.exports.security = {
     allRoutes: true,
     allowOrigins: process.env.NODE_ENV === 'production'
       ? [
-        'https://cyberincub.com',
+        'https://cyberincub-staging.netlify.app',
         'https://www.cyberincub.com'
       ]
       : [
