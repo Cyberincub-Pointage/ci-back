@@ -1,0 +1,41 @@
+<table role="presentation" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+      <p>Bonjour,</p>
+      <p>Une nouvelle demande de permission a été soumise par un incubé :</p>
+
+      <div
+        style="background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; margin: 20px 0; border-radius: 5px;">
+        <p style="margin: 5px 0;"><strong>Incubé :</strong>
+          <%= incubeName %>
+        </p>
+        <p style="margin: 5px 0;"><strong>Type :</strong>
+          <%= permissionType %>
+        </p>
+        <p style="margin: 5px 0;"><strong>Date début :</strong>
+          <%= dateDebut %>
+        </p>
+        <% if (dateFin) { %>
+          <p style="margin: 5px 0;"><strong>Date fin :</strong>
+            <%= dateFin %>
+          </p>
+          <% } %>
+            <p style="margin: 10px 0 5px 0;"><strong>Motif :</strong></p>
+            <p style="margin: 5px 0; font-style: italic;">
+              <%= motif %>
+            </p>
+      </div>
+
+      <p>Veuillez traiter cette demande dans les plus brefs délais.</p>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="<%= appUrl %>/formateur/permissions"
+          style="background-color: #4CAF50; color: white; padding: 14px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+          Voir les demandes
+        </a>
+      </div>
+
+      <p>Cordialement,<br>L'équipe CyberIncub</p>
+    </td>
+  </tr>
+</table>

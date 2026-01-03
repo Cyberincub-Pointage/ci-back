@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= typeof title !=='undefined' ? title : 'Erreur' %>
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" href="<%= sails.config.custom.appConfig.ci.logos.mobile %>" type="image/png">
+  <link rel="stylesheet" href="/styles/main.css">
+  <style>
+    :root {
+      --primary-color: #007bff;
+      /* Bleu vibrant */
+      --secondary-color: #6c757d;
+      /* Gris secondaire */
+      --background-light: #f8f9fa;
+      --text-dark: #212529;
+      /* Ces couleurs seront surchargées par la page d'erreur spécifique */
+      --accent-color: #dc3545;
+      /* Rouge par défaut, sera surchargé */
+      --border-radius: 8px;
+      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-dark);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 50px;
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .column {
+      flex: 1;
+      min-width: 280px;
+      text-align: center;
+    }
+
+    .column.text-content {
+      text-align: left;
+      padding-right: 20px;
+    }
+
+    .logo {
+      margin-bottom: 30px;
+    }
+
+    .logo img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    h1 {
+      font-size: 4.5em;
+      color: var(--accent-color);
+      /* Utilise la variable d'accentuation */
+      margin-bottom: 0px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    h2 {
+      font-size: 1.8em;
+      color: var(--text-dark);
+      margin-top: 10px;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.7;
+      color: var(--secondary-color);
+      margin-bottom: 35px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 15px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+
+    .cta-button:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    .suggestions {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .suggestions h3 {
+      font-size: 1.2em;
+      color: var(--text-dark);
+      margin-bottom: 15px;
+    }
+
+    .suggestions ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .suggestions li {
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+      position: relative;
+      padding-left: 25px;
+    }
+
+    .suggestions li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    .suggestions a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .suggestions a:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 30px;
+      }
+
+      .column {
+        min-width: unset;
+        width: 100%;
+        text-align: center;
+      }
+
+      .column.text-content {
+        padding-right: 0;
+        text-align: center;
+      }
+
+      .suggestions {
+        text-align: center;
+      }
+
+      .suggestions li {
+        padding-left: 0;
+        text-align: center;
+      }
+
+      .suggestions li::before {
+        content: '';
+      }
+
+      h1 {
+        font-size: 3.5em;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <%- body %>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+  <h2 style="color: #333;">Invitation à rejoindre l'administration CyberIncub</h2>
+  <p>Bonjour <%= firstName ? firstName : 'collaborateur' %>,</p>
+
+  <p>
+    <strong>
+      <%= inviterName %>
+    </strong>
+    vous invite à rejoindre l'équipe d'administration en tant que
+    <strong>
+      <%= role %>
+    </strong>.
+  </p>
+
+  <p>
+    Pour accepter cette invitation et définir votre mot de passe, veuillez cliquer sur le bouton ci-dessous :
+  </p>
+
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="<%= invitationLink %>"
+      style="background-color: #4CAF50; color: white; padding: 14px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+      Accepter l'invitation
+    </a>
+  </div>
+
+  <p style="font-size: 0.9em; color: #666;">
+    Ce lien est valide pour une durée de <%= expirationDelay %>.
+  </p>
+
+  <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+  <p style="font-size: 0.8em; color: #999; text-align: center;">
+    Si vous n'êtes pas le destinataire de cet e-mail, veuillez l'ignorer.
+  </p>
+</div>

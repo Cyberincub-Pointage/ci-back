@@ -1,0 +1,33 @@
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+  <h2 style="color: #333;">Nouvel administrateur activé</h2>
+  <p>Bonjour,</p>
+
+  <p>
+    Un nouvel administrateur a accepté son invitation et activé son compte :
+  </p>
+
+  <div style="background-color: #f8f9fa; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0;">
+    <p style="margin: 5px 0;"><strong>Nom :</strong>
+      <%= adminName %>
+    </p>
+    <p style="margin: 5px 0;"><strong>Email :</strong>
+      <%= adminEmail %>
+    </p>
+    <p style="margin: 5px 0;"><strong>Rôle :</strong>
+      <%= adminRole %>
+    </p>
+    <p style="margin: 5px 0;"><strong>Date d'activation :</strong>
+      <%= acceptedAt %>
+    </p>
+  </div>
+
+  <p>
+    Le compte est maintenant actif et l'administrateur peut accéder à la plateforme.
+  </p>
+
+  <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+  <p style="font-size: 0.8em; color: #999; text-align: center;">
+    Ceci est une notification automatique de CyberIncub.
+  </p>
+</div>

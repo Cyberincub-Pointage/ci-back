@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= sails.config.custom.appName %>
+  </title>
+
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" href="<%= sails.config.custom.appConfig.ci.logos.mobile %>" type="image/png">
+
+  <!-- Police Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #007bff;
+      --secondary: #6c757d;
+      --background: #f8f9fa;
+      --text: #212529;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 50px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      max-width: 650px;
+      width: 100%;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo img {
+      max-width: 120px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--secondary);
+      font-size: 1.1em;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="<%= sails.config.custom.appConfig?.ci?.logos.desktop || '/img/logo.png' %>" alt="Logo">
+    </div>
+    <h1>Bienvenue sur <br>
+      <%= sails.config.custom.appName %>
+    </h1>
+    <p>Nous travaillons activement sur ces fonctionnalités.<br>
+      En savoir plus <code>sur nos routes</code>.</p>
+    <a href="#" class="btn">Voir la Documentation</a>
+
+    <footer>
+      © <%= new Date().getFullYear() %> - <%= sails.config.custom.appName %>
+    </footer>
+  </div>
+</body>
+
+</html>

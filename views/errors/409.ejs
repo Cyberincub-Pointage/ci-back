@@ -1,0 +1,34 @@
+<% layout('layout.ejs') %>
+  <% locals.title='409 - Conflit de données' %>
+
+    <style>
+      :root {
+        --accent-color: #f0ad4e;
+        /* Orange pour le conflit */
+      }
+    </style>
+
+    <div class="column text-content">
+      <div class="logo">
+        <img src="<%= sails.config.custom.appConfig.ci.logos.desktop %>" alt="<%= sails.config.custom.appName %> Logo">
+      </div>
+      <h1>409</h1>
+      <h2>Conflit de données</h2>
+      <p>Une requête que vous avez soumise est entrée en conflit avec l'état actuel de la ressource sur le serveur. Cela
+        peut se produire si vous essayez de modifier une ressource qui a été mise à jour par une autre personne ou un
+        autre processus.</p>
+      <a href="/" class="cta-button">Retourner à l'accueil</a>
+
+      <div class="suggestions">
+        <h3>Comment résoudre ce problème ?</h3>
+        <ul>
+          <li><a href="/">Actualisez la page</a> pour obtenir la version la plus récente de la ressource.</li>
+          <li>Vérifiez si d'autres utilisateurs sont en train de modifier la même ressource.</li>
+          <li><a href="/contact">Contactez le support</a> si le problème persiste.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="column image-content">
+      <img src="https://www.disneyclips.com/images5/images/sadness4.png" alt="Illustration de conflit"
+        class="error-image">
+    </div>

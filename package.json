@@ -1,0 +1,65 @@
+{
+  "name": "ci-pointage-back",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [
+    "Pointage",
+    "CI"
+  ],
+  "dependencies": {
+    "@sailshq/lodash": "^3.10.6",
+    "bcryptjs": "^3.0.3",
+    "connect-redis": "^9.0.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "jsonwebtoken": "^9.0.3",
+    "module-alias": "^2.2.3",
+    "nodemailer": "^7.0.12",
+    "nodemon": "^3.1.11",
+    "redis": "^5.10.0",
+    "sails": "^1.5.15",
+    "sails-hook-apianalytics": "^2.0.6",
+    "sails-hook-orm": "^4.0.3",
+    "sails-hook-sockets": "^3.0.0",
+    "sails-hook-swagger-generator": "^3.3.0",
+    "sails-postgresql": "^5.0.1"
+  },
+  "devDependencies": {
+    "eslint": "5.16.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node app.js",
+    "dev": "cross-env NODE_ENV=development nodemon -r module-alias/register app.js",
+    "dev-alt": "cross-env PORT=1338 nodemon -r module-alias/register app.js",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "./node_modules/eslint/bin/eslint.js . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@config": "config",
+    "@api": "api",
+    "@controllers": "api/controllers",
+    "@services": "api/services",
+    "@models": "api/models",
+    "@views": "views"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "swagger/*",
+      "config/locales/*"
+    ]
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/anonymous node/sails user/ci-pointage-back.git"
+  },
+  "author": "anonymous node/sails user",
+  "license": "",
+  "engines": {
+    "node": "^22.20"
+  }
+}

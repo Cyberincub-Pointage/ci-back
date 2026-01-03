@@ -1,0 +1,34 @@
+<% layout('layout.ejs') %>
+  <% locals.title='404 - Page Introuvable' %>
+
+    <style>
+      :root {
+        --accent-color: #ffc107;
+        /* Jaune pour 404 */
+      }
+    </style>
+
+    <div class="column text-content">
+      <div class="logo">
+        <img src="<%= sails.config.custom.appConfig.ci.logos.desktop %>" alt="<%= sails.config.custom.appName %> Logo">
+      </div>
+      <h1>404</h1>
+      <h2>Oups ! Page Introuvable</h2>
+      <p>Désolé, la page que vous recherchez semble s'être perdue dans l'espace numérique. Il est possible qu'elle ait
+        été déplacée, supprimée, ou que l'adresse soit incorrecte.</p>
+      <a href="/" class="cta-button">Retourner à l'accueil</a>
+
+      <div class="suggestions">
+        <h3>Que faire maintenant ?</h3>
+        <ul>
+          <li><a href="/">Visiter notre page d'accueil</a></li>
+          <li>Vérifier l'URL pour toute erreur de frappe.</li>
+          <li><a href="/contact">Nous contacter</a> si le problème persiste.</li>
+          <li><a href="/faq">Consulter notre FAQ</a> pour les questions fréquentes.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="column image-content">
+      <img src="https://www.disneyclips.com/images5/images/sadness5.png" alt="Illustration Page Introuvable"
+        class="error-image">
+    </div>

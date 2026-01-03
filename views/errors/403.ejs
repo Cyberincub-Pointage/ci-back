@@ -1,0 +1,33 @@
+<% layout('layout.ejs') %>
+    <% locals.title='403 - Accès Interdit' %>
+
+        <style>
+            :root {
+                --accent-color: #dc3545;
+            }
+        </style>
+
+        <div class="column text-content">
+            <div class="logo">
+                <img src="<%= sails.config.custom.appConfig.ci.logos.desktop %>"
+                    alt="<%= sails.config.custom.appName %> Logo">
+            </div>
+            <h1>403</h1>
+            <h2>Accès Interdit</h2>
+            <p>Désolé, vous n'avez pas les permissions nécessaires pour accéder à cette ressource. Veuillez vérifier
+                votre connexion ou vos droits d'accès.</p>
+            <a href="/" class="cta-button">Retourner à l'accueil</a>
+
+            <div class="suggestions">
+                <h3>Que faire maintenant ?</h3>
+                <ul>
+                    <li><a href="/">Visiter notre page d'accueil</a></li>
+                    <li>Vérifier votre statut de connexion.</li>
+                    <li><a href="/contact">Nous contacter</a> si vous pensez qu'il s'agit d'une erreur.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column image-content">
+            <img src="https://www.disneyclips.com/images5/images/sadness6.png" alt="Illustration Accès Interdit"
+                class="error-image">
+        </div>

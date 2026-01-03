@@ -1,0 +1,23 @@
+<div class="email-content">
+  <h1>Action requise : <%= firstName %>
+  </h1>
+
+  <p>Bonjour <%= firstName %>,</p>
+
+  <p>Une action urgente est requise sur votre compte CyberIncub concernant vos informations de paiement.</p>
+
+  <div class="alert-box urgent">
+    <%= message %>
+  </div>
+
+  <p>Veuillez vous connecter à votre espace et mettre à jour vos informations bancaires (RIB, Banque) dans votre profil
+    dès que possible.</p>
+
+  <div class="cta-container">
+    <a href="<%= appUrl %>/me" class="btn btn-primary">Mettre à jour mon profil</a>
+  </div>
+
+  <p>Si vous avez déjà effectué cette action, veuillez ignorer ce message ou contacter l'administration.</p>
+
+  <p>Cordialement,<br>L'équipe CyberIncub</p>
+</div>
