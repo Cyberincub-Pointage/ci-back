@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get One Notification',
-  description: 'Get a specific notification for the logged-in admin.',
+  friendlyName: 'Obtenir une notification',
+  description: 'Obtenir une notification spécifique pour l\'administrateur connecté.',
 
   inputs: {
     id: {
@@ -28,12 +28,12 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Ensure the notification belongs to this admin
+    // S'assurer que la notification appartient à cet administrateur
     if (notification.admin !== this.req.me.id) {
       throw 'forbidden';
     }
 
-    // Mark as read if unread
+    // Marquer comme lu si non lu
     if (notification.status === 'unread') {
       await Notification.updateOne({ id }).set({ status: 'read' });
       notification.status = 'read';

@@ -1,15 +1,15 @@
 module.exports = {
-  friendlyName: 'Get Profile',
-  description: 'Get the profile of the logged-in Incube.',
+  friendlyName: 'Obtenir le profil',
+  description: 'Obtenir le profil de l\'incubé connecté.',
 
   inputs: {},
 
   exits: {
     success: {
-      description: 'Profile retrieved successfully.'
+      description: 'Profil récupéré avec succès.'
     },
     notFound: {
-      description: 'Profile not found.',
+      description: 'Profil non trouvé.',
       responseType: 'notFound'
     }
   },

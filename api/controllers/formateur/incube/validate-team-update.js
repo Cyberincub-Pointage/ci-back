@@ -1,17 +1,17 @@
 module.exports = {
-  friendlyName: 'Validate Team Update',
-  description: 'Validate or reject a pending team update for an incube.',
+  friendlyName: 'Valider le changement d\'équipe',
+  description: 'Valider ou rejeter une mise à jour d\'équipe en attente pour un incubé.',
 
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the incube.'
+      description: 'L\'ID de l\'incubé.'
     },
     approve: {
       type: 'boolean',
       required: true,
-      description: 'Whether to approve or reject the update.'
+      description: 'Approuver ou rejeter la mise à jour.'
     }
   },
 
@@ -33,13 +33,13 @@ module.exports = {
         return { message: 'Aucune demande de changement d\'équipe trouvée.' };
       }
 
-      // Apply changes
+      // Appliquer les changements
       await Incube.updateOne({ id }).set({
         equipe: incube.pendingEquipe,
         pendingEquipe: null
       });
 
-      // Notify Incube
+      // Notifier l'incubé
       await sails.helpers.sender.notification.with({
         recipientId: incube.id,
         model: 'incube',
@@ -53,12 +53,12 @@ module.exports = {
       return { message: 'Changement d\'équipe validé.' };
 
     } else {
-      // Reject changes
+      // Rejeter les changements
       await Incube.updateOne({ id }).set({
         pendingEquipe: null
       });
 
-      // Notify Incube
+      // Notifier l'incubé
       await sails.helpers.sender.notification.with({
         recipientId: incube.id,
         model: 'incube',

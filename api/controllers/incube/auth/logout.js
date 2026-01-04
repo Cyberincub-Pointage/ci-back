@@ -1,10 +1,10 @@
 module.exports = {
-  friendlyName: 'Logout',
-  description: 'Logout as Incube.',
+  friendlyName: 'Déconnexion incube',
+  description: 'Se déconnecter en tant qu\'Incubé.',
 
   exits: {
     success: {
-      description: 'Logout successful.'
+      description: 'Déconnexion réussie.'
     }
   },
 

@@ -1,10 +1,10 @@
 module.exports = {
-  friendlyName: 'Logout',
-  description: 'Logout as Formateur.',
+  friendlyName: 'Déconnexion formateur',
+  description: 'Se déconnecter en tant que Formateur.',
 
   exits: {
     success: {
-      description: 'Logout successful.'
+      description: 'Déconnexion réussie.'
     }
   },
 

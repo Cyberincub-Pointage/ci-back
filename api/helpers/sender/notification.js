@@ -56,7 +56,7 @@ module.exports = {
         status: 'unread'
       };
 
-      // Map recipientId to the correct specific model association
+      // Associer recipientId au modèle spécifique correct
       switch (inputs.model) {
         case 'incube':
           dataToCreate.incube = inputs.recipientId;
@@ -68,8 +68,7 @@ module.exports = {
           dataToCreate.admin = inputs.recipientId;
           break;
         default:
-          sails.log.warn(`Unknown model type '${inputs.model}' for notification recipient.`);
-        // We might want to throw error or proceed without linking (which might fail if requirements are strict)
+          sails.log.warn(`Type de modèle inconnu '${inputs.model}' pour le destinataire de la notification.`);
       }
 
       const notification = await Notification.create(dataToCreate).fetch();

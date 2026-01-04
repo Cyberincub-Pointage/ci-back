@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Process Permission',
-  description: 'Formateur approves or rejects a permission request.',
+  friendlyName: 'Traiter une permission',
+  description: 'Le formateur approuve ou rejette une demande de permission.',
 
   inputs: {
     permissionId: {
@@ -47,12 +47,12 @@ module.exports = {
       processedAt: new Date().toISOString()
     };
 
-    // If status was pending, mark as viewed
+    // Si le statut était 'pending', marquer comme vu
     if (permission.status === 'pending' && !permission.viewedAt) {
       updates.viewedAt = new Date().toISOString();
     }
 
-    // Add rejection reason if rejecting
+    // Ajouter le motif de rejet si rejeté
     if (!inputs.approved && inputs.rejectionReason) {
       updates.rejectionReason = inputs.rejectionReason;
     }
@@ -60,9 +60,9 @@ module.exports = {
     const updatedPermission = await PermissionRequest.updateOne({ id: inputs.permissionId })
       .set(updates);
 
-    sails.log.info(`Permission: ${inputs.approved ? 'Approved' : 'Rejected'} request ${inputs.permissionId} by formateur ${formateurId}`);
+    sails.log.info(`Permission : Demande ${inputs.permissionId} ${inputs.approved ? 'approuvée' : 'rejetée'} par le formateur ${formateurId}`);
 
-    // Notify incubé
+    // Notifier l'incubé
     try {
       const incube = await Incube.findOne({ id: permission.incube });
       if (incube) {
@@ -86,7 +86,7 @@ module.exports = {
         });
       }
     } catch (err) {
-      sails.log.error('Error sending permission notification:', err);
+      sails.log.error('Erreur lors de l\'envoi de la notification de permission :', err);
     }
 
     return updatedPermission;

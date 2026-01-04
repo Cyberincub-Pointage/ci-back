@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Profile',
-  description: 'Update the profile of the logged-in Formateur.',
+  friendlyName: 'Mettre à jour le profil',
+  description: 'Mettre à jour le profil du formateur connecté.',
 
   inputs: {
     nom: {
@@ -22,35 +22,21 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Profile updated successfully.'
+      description: 'Profil mis à jour avec succès.'
     }
   },
 
   fn: async function ({ nom, prenom, telephone, photoUrl, specialite }) {
-    let formattedPhone;
-    if (telephone) {
-      try {
-        formattedPhone = await sails.helpers.utils.formatPhoneNumber(telephone);
-      } catch (err) {
-        if (err.code === 'invalidFormat') {
-          throw {
-            badRequest: 'Le format du numéro de téléphone est invalide. Attendu: +22901xxxxxxxx ou 01xxxxxxxx'
-          };
-        }
-        throw err;
-      }
-    }
-
     const updatedFormateur = await Formateur.updateOne({ id: this.req.me.id })
       .set({
         nom: nom || undefined,
         prenom: prenom || undefined,
-        telephone: formattedPhone || undefined,
+        telephone: telephone || undefined,
         photoUrl: (photoUrl === '' || photoUrl === null) ? '' : photoUrl,
         specialite: specialite || undefined
       });
 
-    // Notify formateur
+    // Notifier le formateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'formateur',
@@ -59,7 +45,7 @@ module.exports = {
       content: 'Vos informations de profil ont été mises à jour avec succès.',
       priority: 'low',
       isForAdmin: false
-    }).catch(err => sails.log.error('Error sending update profile notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification de mise à jour de profil :', err));
 
     return {
       message: 'Profil mis à jour avec succès',

@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Mark Permission Viewed',
-  description: 'Formateur marks a permission request as viewed.',
+  friendlyName: 'Marquer la permission comme vue',
+  description: 'Le formateur marque une demande de permission comme vue.',
 
   inputs: {
     permissionId: {
@@ -25,7 +25,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Only update if status is pending and not already viewed
+    // Mettre à jour seulement si le statut est en attente et pas encore vu
     if (permission.status === 'pending' && !permission.viewedAt) {
       const updatedPermission = await PermissionRequest.updateOne({ id: inputs.permissionId })
         .set({
@@ -33,11 +33,11 @@ module.exports = {
           viewedAt: new Date().toISOString()
         });
 
-      sails.log.info(`Permission: Marked request ${inputs.permissionId} as viewed`);
+      sails.log.info(`Permission : Demande ${inputs.permissionId} marquée comme vue`);
       return updatedPermission;
     }
 
-    // Return unchanged if already viewed or processed
+    // Retourner inchangé si déjà vu ou traité
     return permission;
   }
 };

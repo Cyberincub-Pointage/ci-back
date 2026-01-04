@@ -1,7 +1,7 @@
 module.exports = {
 
-  friendlyName: 'Get my warnings',
-  description: 'Get warnings for the logged in incube.',
+  friendlyName: 'Obtenir mes avertissements',
+  description: 'Obtenir les avertissements pour l\'incubé connecté.',
 
   inputs: {},
 

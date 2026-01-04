@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Admin Status',
-  description: 'Activate, suspend, or set pending status for an Admin.',
+  friendlyName: 'Mettre à jour le statut admin',
+  description: 'Activer, suspendre ou mettre en attente un Administrateur.',
 
   inputs: {
     id: {
@@ -16,10 +16,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Admin status updated.'
+      description: 'Statut administrateur mis à jour.'
     },
     notFound: {
-      description: 'Admin not found.',
+      description: 'Administrateur non trouvé.',
       responseType: 'notFound'
     },
     forbidden: {
@@ -39,7 +39,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -48,7 +48,7 @@ module.exports = {
       content: `Le statut de l'administrateur ${updatedAdmin.prenom} ${updatedAdmin.nom} a été mis à jour à "${status}".`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return updatedAdmin;
   }

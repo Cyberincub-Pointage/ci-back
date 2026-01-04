@@ -1,21 +1,14 @@
 module.exports = {
-
-
-  friendlyName: 'Serve Swagger UI',
-
-
-  description: 'Serve the Swagger UI HTML page.',
-
+  friendlyName: 'Servir l\'interface Swagger',
+  description: 'Servir la page HTML de l\'interface Swagger.',
 
   inputs: {},
 
-
   exits: {
     success: {
-      description: 'Serving HTML content'
+      description: 'Contenu HTML servi'
     }
   },
-
 
   fn: async function (inputs) {
     const html = `
@@ -23,7 +16,7 @@ module.exports = {
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>CYPBERINCUB POINTAGE API Documentation</title>
+    <title>Documentation de l'API CYBERINCUB POINTAGE</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css" />
     <style>
       html
@@ -83,6 +76,4 @@ module.exports = {
 
     this.res.send(html);
   }
-
-
 };

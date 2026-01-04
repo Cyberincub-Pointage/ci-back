@@ -4,10 +4,10 @@ module.exports = function unauthorized(data, options) {
   var statusCodeToSet = 401;
 
   if (data === undefined) {
-    sails.log.info('Ran custom response: res.unauthorized()');
+    sails.log.info('Exécution de la réponse personnalisée : res.unauthorized()');
     return res.sendStatus(statusCodeToSet);
   } else if (_.isError(data)) {
-    sails.log.info('Custom response `res.unauthorized()` called with an Error:', data);
+    sails.log.info('Réponse personnalisée `res.unauthorized()` appelée avec une erreur :', data);
     if (!_.isFunction(data.toJSON)) {
       if (process.env.NODE_ENV === 'production') {
         return res.sendStatus(statusCodeToSet);

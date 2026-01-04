@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get Daily Amount',
-  description: 'Get the currently active daily amount and optional history.',
+  friendlyName: 'Obtenir le montant journalier',
+  description: 'Obtenir le montant journalier actuellement actif et l\'historique optionnel.',
 
   inputs: {
     date: {
@@ -17,7 +17,7 @@ module.exports = {
   fn: async function (inputs) {
     const targetDate = inputs.date || new Date().toISOString().split('T')[0];
 
-    // Find the latest record where effectiveDate <= targetDate
+    // Trouver le dernier enregistrement où effectiveDate <= targetDate
     const currentConfig = await DailyAmount.find({
       effectiveDate: { '<=': targetDate }
     })

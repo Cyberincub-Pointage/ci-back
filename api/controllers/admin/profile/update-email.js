@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Email',
-  description: 'Update the email of the logged-in Admin.',
+  friendlyName: 'Mettre à jour l\'email',
+  description: 'Mettre à jour l\'email de l\'administrateur connecté.',
 
   inputs: {
     email: {
@@ -16,14 +16,14 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Email updated successfully.'
+      description: 'Email mis à jour avec succès.'
     },
     emailAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided email address is already in use.',
+      description: 'L\'adresse email fournie est déjà utilisée.',
     },
     badCombo: {
-      description: 'Incorrect password.',
+      description: 'Mot de passe incorrect.',
       responseType: 'unauthorized'
     }
   },
@@ -43,7 +43,7 @@ module.exports = {
           email: email.toLowerCase()
         });
 
-      // Notify admin
+      // Notifier l'Administrateur
       await sails.helpers.sender.notification.with({
         recipientId: this.req.me.id,
         model: 'admin',
@@ -52,7 +52,7 @@ module.exports = {
         content: `Votre adresse email a été mise à jour avec succès vers ${email.toLowerCase()}.`,
         priority: 'normal',
         isForAdmin: true
-      }).catch(err => sails.log.error('Error sending update email notification:', err));
+      }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification de mise à jour d\'email :', err));
 
       return {
         message: 'Email mis à jour avec succès',

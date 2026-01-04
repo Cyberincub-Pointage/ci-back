@@ -1,10 +1,10 @@
 module.exports = {
-  friendlyName: 'Get All Projects',
-  description: 'Retrieve a list of all projects.',
+  friendlyName: 'Obtenir tous les projets',
+  description: 'Récupérer la liste de tous les projets.',
   inputs: {},
   exits: {
     success: {
-      description: 'List of projects retrieved successfully.'
+      description: 'Liste des projets récupérée avec succès.'
     }
   },
   fn: async function () {

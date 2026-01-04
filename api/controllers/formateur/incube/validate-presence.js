@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Validate Presence',
-  description: 'Formateur validates or rejects a presence.',
+  friendlyName: 'Valider une présence',
+  description: 'Le formateur valide ou rejette une présence.',
 
   inputs: {
     presenceId: {
@@ -46,7 +46,7 @@ module.exports = {
 
     const updated = await Presence.updateOne({ id: inputs.presenceId }).set(updates);
 
-    // Notify incubé
+    // Notifier l'incubé
     try {
       await sails.helpers.sender.notification.with({
         recipientId: presence.incube,
@@ -60,7 +60,7 @@ module.exports = {
         isForAdmin: false
       });
     } catch (err) {
-      sails.log.error('Error sending presence validation notification:', err);
+      sails.log.error('Erreur lors de l\'envoi de la notification de validation de présence :', err);
     }
 
     return updated;

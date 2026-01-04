@@ -1,34 +1,37 @@
 module.exports = {
-  friendlyName: 'Update Team',
-  description: 'Update an existing team.',
+  friendlyName: 'Mettre à jour une équipe',
+  description: 'Mettre à jour une équipe existante.',
+
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the team to update.'
+      description: 'L\'ID de l\'équipe à mettre à jour.'
     },
     nom: {
       type: 'string',
-      description: 'The new name of the team.'
+      description: 'Le nouveau nom de l\'équipe.'
     },
     description: {
       type: 'string',
-      description: 'The new description of the team.'
+      description: 'La nouvelle description de l\'équipe.'
     },
     formateur: {
       type: 'string',
-      description: 'The ID of the new responsible formateur.'
+      description: 'L\'ID du nouveau formateur responsable.'
     }
   },
+
   exits: {
     success: {
-      description: 'Team updated successfully.'
+      description: 'Équipe mise à jour avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Team not found.'
+      description: 'Équipe non trouvée.'
     }
   },
+
   fn: async function ({ id, nom, description, formateur }) {
     const oldTeam = await Equipe.findOne({ id });
     if (!oldTeam) {
@@ -38,7 +41,7 @@ module.exports = {
     const updatedTeam = await Equipe.updateOne({ id })
       .set({ nom, description, formateur });
 
-    // Calculate changes
+    // Changements
     let changes = [];
     if (nom && oldTeam.nom !== updatedTeam.nom) {
       changes.push(`Nom: "${oldTeam.nom}" -> "${updatedTeam.nom}"`);
@@ -54,7 +57,7 @@ module.exports = {
 
     const changesText = changes.length > 0 ? ` Modifications : ${changes.join(', ')}.` : ' Aucune modification détectée.';
 
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -63,7 +66,7 @@ module.exports = {
       content: `L'équipe "${oldTeam.nom}" a été mise à jour.${changesText}`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return updatedTeam;
   }

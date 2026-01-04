@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  friendlyName: 'Generate JWT',
-  description: 'Generate a JSON Web Token.',
+  friendlyName: 'Générer un JWT',
+  description: 'Générer un JSON Web Token.',
   inputs: {
     payload: {
       type: 'ref',

@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Login',
-  description: 'Log in as Formateur.',
+  friendlyName: 'Connexion formateur',
+  description: 'Se connecter en tant que Formateur.',
 
   inputs: {
     email: {
@@ -16,14 +16,14 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Login successful.'
+      description: 'Connexion réussie.'
     },
     badCombo: {
-      description: 'Invalid email or password.',
+      description: 'Email ou mot de passe invalide.',
       statusCode: 401
     },
     accountSuspended: {
-      description: 'The account has been suspended.',
+      description: 'Le compte a été suspendu.',
       statusCode: 403
     }
   },
@@ -31,33 +31,33 @@ module.exports = {
   fn: async function ({ email, password }) {
     const bcrypt = require('bcryptjs');
 
-    // Find the formateur by email
+    // Trouver le formateur par email
     const formateur = await Formateur.findOne({ email: email.toLowerCase() });
 
     if (!formateur) {
       throw { badCombo: { message: 'Email ou mot de passe incorrect.' } };
     }
 
-    // Verify password
+    // Vérifier le mot de passe
     const passwordsMatch = await bcrypt.compare(password, formateur.password);
 
     if (!passwordsMatch) {
       throw { badCombo: { message: 'Email ou mot de passe incorrect.' } };
     }
 
-    // Check status
+    // Vérifier le statut
     if (formateur.status === 'suspended') {
       throw { accountSuspended: { message: 'Votre compte a été suspendu. Contactez l\'administrateur.' } };
     }
 
-    // Generate JWT
+    // Générer le JWT
     const token = await sails.helpers.generateJwt({
       id: formateur.id,
       email: formateur.email,
       role: formateur.role
     });
 
-    // Return token and user data
+    // Retourner le jeton et les données utilisateur
     return {
       token,
       user: {

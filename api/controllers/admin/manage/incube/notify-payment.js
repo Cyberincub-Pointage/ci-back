@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Notify Payment Info',
-  description: 'Notify an incube to update their banking information urgently.',
+  friendlyName: 'Notifier infos de paiement',
+  description: 'Notifier un incubé pour mettre à jour ses informations bancaires de toute urgence.',
 
   inputs: {
     id: {
@@ -25,7 +25,7 @@ module.exports = {
     const message = "URGENT : Merci de renseigner vos informations bancaires immédiatement dans votre profil pour permettre le traitement de vos paiements.";
 
     try {
-      // 1. Send in-app notification
+      // Envoyer une notification
       try {
         await sails.helpers.sender.notification.with({
           recipientId: incube.id,
@@ -37,10 +37,10 @@ module.exports = {
           isForAdmin: false
         });
       } catch (err) {
-        sails.log.error('Failed to send notification in notify-payment:', err);
+        sails.log.error('Échec de l\'envoi de la notification dans notify-payment :', err);
       }
 
-      // 2. Send email
+      // Envoyer un email
       const appUrls = sails.config.custom.appUrl;
 
       await sails.helpers.sender.email.with({
@@ -57,10 +57,10 @@ module.exports = {
       });
 
     } catch (error) {
-      sails.log.error('Failed to send payment notification email:', error);
+      sails.log.error('Échec de l\'envoi de l\'email de notification de paiement :', error);
     }
 
-    // Notify Admin (Confirmation)
+    // Notifier l'Administrateur (Confirmation)
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -69,8 +69,8 @@ module.exports = {
       content: `Une notification urgente (paiement) a été envoyée à l'incubé ${incube.prenom} ${incube.nom}.`,
       priority: 'low',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
-    return { message: `Payment notification sent to ${incube.email}` };
+    return { message: `Notification de paiement envoyée à ${incube.email}` };
   }
 };

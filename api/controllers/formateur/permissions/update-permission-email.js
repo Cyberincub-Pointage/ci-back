@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Permission Email',
-  description: 'Update the email address used for permission requests.',
+  friendlyName: 'Mettre à jour l\'email de permission',
+  description: 'Mettre à jour l\'adresse email utilisée pour les demandes de permission.',
 
   inputs: {
     email: {
@@ -24,7 +24,7 @@ module.exports = {
       throw 'forbidden';
     }
 
-    // Check if configuration exists
+    // Vérifier si la configuration existe
     const existing = await PermissionEmail.find().limit(1);
 
     if (existing && existing.length > 0) {

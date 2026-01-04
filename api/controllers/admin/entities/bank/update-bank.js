@@ -1,34 +1,37 @@
 module.exports = {
-  friendlyName: 'Update Bank',
-  description: 'Update an existing bank.',
+  friendlyName: 'Mettre à jour une banque',
+  description: 'Mettre à jour une banque existante.',
+
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the bank to update.'
+      description: 'L\'ID de la banque à mettre à jour.'
     },
     nom: {
       type: 'string',
-      description: 'The new name of the bank.'
+      description: 'Le nouveau nom de la banque.'
     },
     code: {
       type: 'string',
-      description: 'The new unique code for the bank.'
+      description: 'Le nouveau code unique de la banque.'
     }
   },
+
   exits: {
     success: {
-      description: 'Bank updated successfully.'
+      description: 'Banque mise à jour avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Bank not found.'
+      description: 'Banque non trouvée.'
     },
     codeAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided bank code is already in use.'
+      description: 'Le code de banque fourni est déjà utilisé.'
     }
   },
+
   fn: async function ({ id, nom, code }) {
     const oldBank = await Banque.findOne({ id });
     if (!oldBank) {
@@ -39,7 +42,7 @@ module.exports = {
       .set({ nom, code })
       .intercept('E_UNIQUE', 'codeAlreadyInUse');
 
-    // Calculate changes
+    // Changements
     let changes = [];
     if (oldBank.nom !== updatedBank.nom) {
       changes.push(`Nom: "${oldBank.nom}" -> "${updatedBank.nom}"`);
@@ -50,7 +53,7 @@ module.exports = {
 
     const changesText = changes.length > 0 ? ` Modifications : ${changes.join(', ')}.` : ' Aucune modification détectée.';
 
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -59,7 +62,7 @@ module.exports = {
       content: `La banque "${oldBank.nom}" (${oldBank.code}) a été mise à jour.${changesText}`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return updatedBank;
   }

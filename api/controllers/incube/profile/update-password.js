@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Password',
-  description: 'Update the password of the logged-in Incube.',
+  friendlyName: 'Mettre à jour le mot de passe',
+  description: 'Mettre à jour le mot de passe de l\'incubé connecté.',
 
   inputs: {
     currentPassword: {
@@ -15,10 +15,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Password updated successfully.'
+      description: 'Mot de passe mis à jour avec succès.'
     },
     badCombo: {
-      description: 'Incorrect current password.',
+      description: 'Mot de passe actuel incorrect.',
       responseType: 'unauthorized'
     }
   },
@@ -32,20 +32,9 @@ module.exports = {
     const passwordsMatch = await bcrypt.compare(currentPassword, incube.password);
     if (!passwordsMatch) { throw 'badCombo'; }
 
-    try {
-      await sails.helpers.utils.validatePassword(newPassword, 'incube');
-    } catch (err) {
-      if (err.invalid) {
-        throw new Error(err.invalid);
-      }
-      throw err;
-    }
+    await Incube.updateOne({ id: this.req.me.id }).set({ password: newPassword });
 
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-
-    await Incube.updateOne({ id: this.req.me.id }).set({ password: hashedNewPassword });
-
-    // Notify incubé
+    // Notifier l'incubé
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'incube',
@@ -54,7 +43,7 @@ module.exports = {
       content: 'Votre mot de passe a été modifié avec succès.',
       priority: 'normal',
       isForAdmin: false
-    }).catch(err => sails.log.error('Error sending update password notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification de mise à jour du mot de passe :', err));
 
     return { message: 'Mot de passe mis à jour avec succès' };
   }

@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Set Daily Amount',
-  description: 'Set the daily presence payment amount, effective from a specific date.',
+  friendlyName: 'Montant journalier',
+  description: 'Définir le montant de paiement journalier de présence, effectif à partir d\'une date spécifique.',
 
   inputs: {
     amount: {
@@ -24,15 +24,15 @@ module.exports = {
   fn: async function (inputs) {
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(inputs.effectiveDate)) {
-      throw { badRequest: 'Invalid date format. Use YYYY-MM-DD.' };
+      throw { badRequest: 'Format de date invalide. Utilisez AAAA-MM-JJ.' };
     }
 
     const today = new Date().toISOString().split('T')[0];
     if (inputs.effectiveDate < today) {
-      throw { badRequest: 'Effective date cannot be in the past.' };
+      throw { badRequest: 'La date effective ne peut pas être dans le passé.' };
     }
 
-    // Check if a record already exists for this exact date?
+    // Vérifier si un enregistrement existe déjà pour cette date exacte ?
     const existing = await DailyAmount.findOne({ effectiveDate: inputs.effectiveDate });
 
     if (existing) {
@@ -42,7 +42,7 @@ module.exports = {
       });
 
 
-      // Notify Admin
+      // Notifier l'Administrateur
       await sails.helpers.sender.notification.with({
         recipientId: this.req.me.id,
         model: 'admin',
@@ -51,16 +51,16 @@ module.exports = {
         content: `Le montant journalier pour le ${inputs.effectiveDate} a été mis à jour à ${inputs.amount}.`,
         priority: 'normal',
         isForAdmin: true
-      }).catch(err => sails.log.error('Error sending admin notification:', err));
+      }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
-      return { message: 'Daily amount updated for this effective date.', data: existing };
+      return { message: 'Montant journalier mis à jour pour cette date effective.', data: existing };
     } else {
       const newRecord = await DailyAmount.create({
         amount: inputs.amount,
         effectiveDate: inputs.effectiveDate,
         createdBy: this.req.me.id
       }).fetch();
-      return { message: 'Daily amount scheduled.', data: newRecord };
+      return { message: 'Montant journalier programmé.', data: newRecord };
     }
   }
 };

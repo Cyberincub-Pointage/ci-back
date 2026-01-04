@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get One Incube',
-  description: 'Get a single incube by ID.',
+  friendlyName: 'Obtenir un incubé',
+  description: 'Obtenir un seul incubé par ID.',
 
   inputs: {
     id: {
@@ -11,7 +11,7 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Incube found.'
+      description: 'Incubé trouvé.'
     },
     notFound: {
       responseType: 'notFound'

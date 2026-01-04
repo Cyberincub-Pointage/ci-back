@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Request Permission',
-  description: 'Incubé requests a permission.',
+  friendlyName: 'Demander une permission',
+  description: 'L\'incubé demande une permission.',
 
   inputs: {
     type: {
@@ -34,7 +34,7 @@ module.exports = {
     const incubeId = this.req.me.id;
 
     try {
-      // Validate date format (basic check)
+      // Valider le format de date (vérification de base)
       if (!inputs.dateDebut.match(/^\d{4}-\d{2}-\d{2}$/)) {
         throw { badRequest: 'Format de date invalide. Utilisez YYYY-MM-DD.' };
       }
@@ -43,17 +43,17 @@ module.exports = {
         throw { badRequest: 'Format de date de fin invalide. Utilisez YYYY-MM-DD.' };
       }
 
-      // Get today's date (without time)
+      // Obtenir la date d'aujourd'hui (sans l'heure)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const todayStr = today.toISOString().split('T')[0];
 
-      // Validate dateDebut is today or in the future
+      // Valider que la date de début est aujourd'hui ou dans le futur
       if (inputs.dateDebut < todayStr) {
         throw { badRequest: 'La date de début doit être aujourd\'hui ou dans le futur.' };
       }
 
-      // Validate dateFin is after dateDebut if provided
+      // Valider que la date de fin est après la date de début si fournie
       if (inputs.dateFin && inputs.dateFin < inputs.dateDebut) {
         throw { badRequest: 'La date de fin doit être après la date de début.' };
       }
@@ -79,9 +79,9 @@ module.exports = {
         processedAt: null
       }).fetch();
 
-      sails.log.info(`Permission: Created request ${permission.id} for incube ${incubeId}`);
+      sails.log.info(`Permission : Demande créée ${permission.id} pour l'incubé ${incubeId}`);
 
-      // Notify incubé (confirmation)
+      // Notifier l'incubé (confirmation)
       try {
         await sails.helpers.sender.notification.with({
           recipientId: incubeId,
@@ -93,10 +93,10 @@ module.exports = {
           isForAdmin: false
         });
       } catch (err) {
-        sails.log.error('Error sending permission confirmation notification:', err);
+        sails.log.error('Erreur lors de l\'envoi de la notification de confirmation de permission :', err);
       }
 
-      // Notify all active formateurs
+      // Notifier tous les formateurs actifs
       try {
         const formateurs = await Formateur.find({ status: 'active' });
         for (const formateur of formateurs) {
@@ -109,15 +109,15 @@ module.exports = {
             content: `L'incubé ${incube.prenom} ${incube.nom} a soumis une nouvelle demande de permission (${typeLabels[inputs.type]}) pour le ${inputs.dateDebut}.`,
             priority: 'normal',
             isForAdmin: false
-          }).catch(err => sails.log.error('Error sending formateur notification:', err));
+          }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification au formateur :', err));
         }
       } catch (err) {
-        sails.log.error('Error notifying formateurs:', err);
+        sails.log.error('Erreur lors de la notification des formateurs :', err);
       }
 
-      // Send email to permission email address
+      // Envoyer un email à l'adresse de permission
       try {
-        // Fetch dynamic email permissionEmail
+        // Récupérer l'email dynamique permissionEmail
         const config = await PermissionEmail.find().limit(1);
         const permissionEmail = (config && config.length > 0) ? config[0].value : null;
         const appUrls = sails.config.custom.appUrl;
@@ -138,23 +138,23 @@ module.exports = {
           }
         });
       } catch (emailErr) {
-        sails.log.error('Error sending permission email:', emailErr);
+        sails.log.error('Erreur lors de l\'envoi de l\'email de permission :', emailErr);
       }
 
       return permission;
 
     } catch (err) {
-      // Pass through known exits
+      // Passer les sorties connues
       if (err.badRequest) {
         throw err;
       }
 
-      // Check for validation errors
+      // Vérifier les erreurs de validation
       if (err.code === 'E_VALIDATION') {
         throw { badRequest: 'Données invalides (vérifiez la longueur du motif).' };
       }
 
-      sails.log.error('Error creating permission request:', err);
+      sails.log.error('Erreur lors de la création de la demande de permission :', err);
       throw { badRequest: 'Une erreur interne est survenue lors du traitement de votre demande.' };
     }
   }

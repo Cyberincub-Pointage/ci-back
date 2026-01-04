@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Resend Invitation',
-  description: 'Resend invitation email to a pending formateur.',
+  friendlyName: 'Renvoyer l\'invitation',
+  description: 'Renvoyer l\'email d\'invitation à un formateur en attente.',
 
   inputs: {
     id: {
@@ -11,13 +11,13 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Invitation resent.'
+      description: 'Invitation renvoyée.'
     },
     notFound: {
       responseType: 'notFound'
     },
     alreadyActive: {
-      description: 'User is already active.'
+      description: 'L\'utilisateur est déjà actif.'
     }
   },
 
@@ -28,7 +28,7 @@ module.exports = {
 
     const crypto = require('crypto');
 
-    // Generate new token
+    // Générer un nouveau token
     const invitationToken = crypto.randomBytes(32).toString('hex');
     const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
 
@@ -37,7 +37,7 @@ module.exports = {
       invitationTokenExpiresAt
     });
 
-    // Send email
+    // Envoyer l\'email
     try {
       const admin = await Admin.findOne({ id: this.req.me.id });
       const inviterName = admin ? `${admin.prenom} ${admin.nom}` : 'Un administrateur';
@@ -58,7 +58,7 @@ module.exports = {
         }
       });
 
-      // Notify Admin
+      // Notifier l'admin
       await sails.helpers.sender.notification.with({
         recipientId: this.req.me.id,
         model: 'admin',
@@ -67,10 +67,10 @@ module.exports = {
         content: `L'invitation pour le formateur ${formateur.prenom} ${formateur.nom} a été renvoyée.`,
         priority: 'normal',
         isForAdmin: true
-      }).catch(err => sails.log.error('Error sending admin notification:', err));
+      }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification à l\'admin :', err));
 
     } catch (e) {
-      sails.log.error('Failed to resend invitation:', e);
+      sails.log.error('Échec du renvoi de l\'invitation :', e);
     }
 
     return { message: 'Invitation renvoyée avec succès' };

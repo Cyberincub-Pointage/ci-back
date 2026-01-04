@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Verify Email',
-  description: 'Verify email address using a token.',
+  friendlyName: 'Vérifier l\'email',
+  description: 'Vérifier l\'adresse email en utilisant un token.',
 
   inputs: {
     token: {
@@ -11,10 +11,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Email verified successfully.'
+      description: 'Email vérifié avec succès.'
     },
     invalidToken: {
-      description: 'Invalid or expired token.',
+      description: 'Token invalide ou expiré.',
       responseType: 'badRequest'
     }
   },

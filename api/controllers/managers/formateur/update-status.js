@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Formateur Status',
-  description: 'Activate, suspend, or pending a Formateur.',
+  friendlyName: 'Mettre à jour le statut du formateur',
+  description: 'Activer, suspendre ou mettre en attente un formateur.',
 
   inputs: {
     id: {
@@ -16,10 +16,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Formateur status updated.'
+      description: 'Statut du formateur mis à jour.'
     },
     notFound: {
-      description: 'Formateur not found.',
+      description: 'Formateur non trouvé.',
       responseType: 'notFound'
     }
   },
@@ -32,7 +32,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Notify Admin
+    // Notifier l'admin
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -41,7 +41,7 @@ module.exports = {
       content: `Le statut du formateur ${updatedFormateur.prenom} ${updatedFormateur.nom} a été mis à jour à "${status}".`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification à l\'admin :', err));
 
     return updatedFormateur;
   }

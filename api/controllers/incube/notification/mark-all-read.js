@@ -1,12 +1,12 @@
 module.exports = {
-  friendlyName: 'Mark all notifications as read',
-  description: 'Mark all unread notifications for the logged-in incube as read.',
+  friendlyName: 'Tout marquer comme lu',
+  description: 'Marquer toutes les notifications non lues de l\'incubé connecté comme lues.',
 
   inputs: {},
 
   exits: {
     success: {
-      description: 'All notifications marked as read.'
+      description: 'Toutes les notifications marquées comme lues.'
     }
   },
 
@@ -18,6 +18,6 @@ module.exports = {
       status: 'read'
     });
 
-    return { message: 'All notifications marked as read.' };
+    return { message: 'Toutes les notifications ont été marquées comme lues.' };
   }
 };

@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Login',
-  description: 'Log in using the provided email and password.',
+  friendlyName: 'Connexion',
+  description: 'Se connecter en utilisant l\'email et le mot de passe fournis.',
 
   inputs: {
     email: {
@@ -16,10 +16,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Login successful.'
+      description: 'Connexion réussie.'
     },
     badCombo: {
-      description: 'Invalid email or password.',
+      description: 'Email ou mot de passe invalide.',
       statusCode: 401
     }
   },
@@ -27,28 +27,28 @@ module.exports = {
   fn: async function ({ email, password }) {
     const bcrypt = require('bcryptjs');
 
-    // Find the incube by email
+    // Trouver l'incubé par email
     const incube = await Incube.findOne({ email: email.toLowerCase() });
 
     if (!incube) {
       throw { badCombo: { message: 'Email ou mot de passe incorrect.' } };
     }
 
-    // Verify password
+    // Vérifier le mot de passe
     const passwordsMatch = await bcrypt.compare(password, incube.password);
 
     if (!passwordsMatch) {
       throw { badCombo: { message: 'Email ou mot de passe incorrect.' } };
     }
 
-    // Generate JWT
+    // Générer le JWT
     const token = await sails.helpers.generateJwt({
       id: incube.id,
       email: incube.email,
       role: 'incube'
     });
 
-    // Return token and user data
+    // Retourner le token et les données utilisateur
     return {
       token,
       user: {

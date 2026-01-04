@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'List notifications',
-  description: 'List notifications for the logged-in formateur.',
+  friendlyName: 'Lister les notifications',
+  description: 'Lister les notifications pour le formateur connecté.',
 
   inputs: {
     page: {

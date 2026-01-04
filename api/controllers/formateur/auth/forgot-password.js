@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Forgot Password',
-  description: 'Initiate password reset process for Formateur.',
+  friendlyName: 'Mot de passe oublié',
+  description: 'Initier le processus de réinitialisation de mot de passe pour le Formateur.',
 
   inputs: {
     email: {
@@ -11,7 +11,7 @@ module.exports = {
   },
   exits: {
     success: {
-      description: 'If email exists, reset link sent.'
+      description: 'Si l\'email existe, lien de réinitialisation envoyé.'
     }
   },
 
@@ -24,17 +24,12 @@ module.exports = {
     }
 
     const passwordResetToken = crypto.randomBytes(32).toString('hex');
-    const passwordResetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+    const passwordResetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 heure
 
     await Formateur.updateOne({ id: formateur.id }).set({
-      passwordResetToken: passwordResetToken, // Note: Formateur model might need these fields too if not present. Confirmed in step 7 they are likely missing.
-      // Step 7 file view of Formateur.js did NOT show passwordResetToken fields. Only invitationToken.
-      // I need to update Formateur model as well.
+      passwordResetToken: passwordResetToken,
       passwordResetTokenExpiresAt
     });
-
-    // Defer writing to file until I can verify/update Formateur model. 
-    // Actually I'll write the file and then update the model immediately.
 
     try {
       const appUrls = sails.config.custom.appUrl;
@@ -52,7 +47,7 @@ module.exports = {
         }
       });
     } catch (error) {
-      sails.log.error('Failed to send password reset email:', error);
+      sails.log.error('Échec de l\'envoi de l\'email de réinitialisation de mot de passe :', error);
     }
 
     return;

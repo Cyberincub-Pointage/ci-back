@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Create Formateur',
-  description: 'Create a new Formateur.',
+  friendlyName: 'Créer un formateur',
+  description: 'Créer un nouveau formateur.',
   inputs: {
     email: {
       type: 'string',
@@ -23,22 +23,22 @@ module.exports = {
   },
   exits: {
     success: {
-      description: 'Formateur created successfully.'
+      description: 'Formateur créé avec succès.'
     },
     emailAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided email address is already in use.',
+      description: 'L\'adresse email fournie est déjà utilisée.',
     },
   },
   fn: async function ({ email, nom, prenom, role }) {
     const crypto = require('crypto');
     const bcrypt = require('bcryptjs');
 
-    // Generate invitation token
+    // Générer le token d'invitation
     const invitationToken = crypto.randomBytes(32).toString('hex');
-    const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 heures
 
-    // Generate a temporary random password (will be reset by user)
+    // Générer un mot de passe temporaire aléatoire (sera modifié par l'utilisateur)
     const randomPassword = crypto.randomBytes(10).toString('hex');
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
@@ -55,13 +55,11 @@ module.exports = {
       .intercept('E_UNIQUE', 'emailAlreadyInUse')
       .fetch();
 
-    // Send invitation email
+    // Envoyer l'email d'invitation
     try {
-      // Fetch admin details to get the name
+      // Récupérer les détails de l'admin pour obtenir le nom
       const admin = await Admin.findOne({ id: this.req.me.id });
       const inviterName = admin ? `${admin.prenom} ${admin.nom}` : 'Un administrateur';
-
-      // Ensure app config exists, fallback if testing
       const appUrls = sails.config.custom.appUrl;
 
       await sails.helpers.sender.email.with({
@@ -79,7 +77,7 @@ module.exports = {
         }
       });
 
-      // Notify Admin
+      // Notifier l'admin
       await sails.helpers.sender.notification.with({
         recipientId: this.req.me.id,
         model: 'admin',
@@ -88,11 +86,10 @@ module.exports = {
         content: `Le formateur ${prenom} ${nom} a été ajouté avec succès.`,
         priority: 'normal',
         isForAdmin: true
-      }).catch(err => sails.log.error('Error sending admin notification:', err));
+      }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification à l\'admin :', err));
 
     } catch (error) {
-      sails.log.error('Failed to send invitation email:', error);
-      // Note: User is created but email failed. Client might want to know.
+      sails.log.error('Échec de l\'envoi de l\'email d\'invitation :', error);
     }
 
     return newFormateur;

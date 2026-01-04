@@ -1,20 +1,20 @@
 module.exports = {
-  friendlyName: 'Get One Team',
-  description: 'Retrieve details of a specific team.',
+  friendlyName: 'Obtenir une équipe',
+  description: 'Récupérer les détails d\'une équipe spécifique.',
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the team to retrieve.'
+      description: 'L\'ID de l\'équipe à récupérer.'
     }
   },
   exits: {
     success: {
-      description: 'Team details retrieved successfully.'
+      description: 'Détails de l\'équipe récupérés avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Team not found.'
+      description: 'Équipe non trouvée.'
     }
   },
   fn: async function ({ id }) {

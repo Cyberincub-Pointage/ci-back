@@ -1,20 +1,20 @@
 module.exports = {
-  friendlyName: 'Get One Project',
-  description: 'Retrieve details of a specific project.',
+  friendlyName: 'Obtenir un projet',
+  description: 'Récupérer les détails d\'un projet spécifique.',
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the project to retrieve.'
+      description: 'L\'ID du projet à récupérer.'
     }
   },
   exits: {
     success: {
-      description: 'Project details retrieved successfully.'
+      description: 'Détails du projet récupérés avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Project not found.'
+      description: 'Projet non trouvé.'
     }
   },
   fn: async function ({ id }) {
@@ -26,7 +26,7 @@ module.exports = {
 
     let criteria = { projet: id };
 
-    // Check if team is populated or just an ID
+    // Vérifier si l'équipe est peuplée ou juste un ID
     const equipeId = (project.equipe && project.equipe.id)
       ? project.equipe.id
       : (project.equipe && typeof project.equipe !== 'object' ? project.equipe : null);
@@ -45,7 +45,7 @@ module.exports = {
       .populate('banque')
       .populate('projet');
 
-    // Attach incubes to the project object
+    // Attacher les incubés à l'objet projet
     project.incubes = incubes;
 
     return project;

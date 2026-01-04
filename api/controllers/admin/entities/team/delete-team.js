@@ -1,22 +1,25 @@
 module.exports = {
-  friendlyName: 'Delete Team',
-  description: 'Delete a team.',
+  friendlyName: 'Supprimer une équipe',
+  description: 'Supprimer une équipe.',
+
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the team to delete.'
+      description: 'L\'ID de l\'équipe à supprimer.'
     }
   },
+
   exits: {
     success: {
-      description: 'Team deleted successfully.'
+      description: 'Équipe supprimée avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Team not found.'
+      description: 'Équipe non trouvée.'
     }
   },
+
   fn: async function ({ id }) {
     const deletedTeam = await Equipe.destroyOne({ id });
 
@@ -24,8 +27,7 @@ module.exports = {
       throw 'notFound';
     }
 
-
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -34,7 +36,7 @@ module.exports = {
       content: `L'équipe ${deletedTeam.nom} a été supprimée.`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return deletedTeam;
   }

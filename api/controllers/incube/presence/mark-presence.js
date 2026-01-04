@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Mark Presence',
-  description: 'Allow an incube to mark their presence for the day.',
+  friendlyName: 'Marquer la présence',
+  description: 'Permettre à un incubé de marquer sa présence pour la journée.',
 
   inputs: {
     latitude: {
@@ -26,7 +26,7 @@ module.exports = {
     },
     alreadyExists: {
       statusCode: 409,
-      description: 'Presence already marked for today.'
+      description: 'Présence déjà marquée pour aujourd\'hui.'
     }
   },
 
@@ -35,7 +35,7 @@ module.exports = {
     const today = new Date().toISOString().split('T')[0];
     const nowTime = new Date().toTimeString().split(' ')[0];
 
-    // Check if already exists
+    // Vérifier si existe déjà
     const existing = await Presence.findOne({
       incube: incubeId,
       date: today
@@ -45,7 +45,7 @@ module.exports = {
       throw 'alreadyExists';
     }
 
-    // Target Coordinates from config
+    // Coordonnées cibles depuis la configuration
     const { latitude: targetLat, longitude: targetLon, radius: allowedRadius } = sails.config.custom.presenceZone;
 
     const distance = await sails.helpers.geo.getDistance.with({
@@ -58,14 +58,7 @@ module.exports = {
 
     sails.log.info(`MarkPresence: User ${incubeId} at distance ${distance}m (Allowed: ${allowedRadius}m) -> InZone: ${isInZone}`);
 
-    // Removed the throw for distance > allowedRadius to allow marking presence even if out of zone
-    // if (distance > allowedRadius) {
-    //   throw {
-    //     badRequest: `Géolocalisation invalide. Vous devez être sur le site (Distance: ${Math.round(distance)}m).`
-    //   };
-    // }
-
-    // Determine Daily Amount
+    // Déterminer le montant journalier
     const currentConfig = await DailyAmount.find({
       effectiveDate: { '<=': today }
     })
@@ -86,7 +79,7 @@ module.exports = {
       validatedAt: null,
     }).fetch();
 
-    // Notify incubé
+    // Notifier l'incubé
     try {
       await sails.helpers.sender.notification.with({
         recipientId: incubeId,
@@ -100,7 +93,7 @@ module.exports = {
         isForAdmin: false
       });
     } catch (err) {
-      sails.log.error('Error sending presence notification:', err);
+      sails.log.error('Erreur lors de l\'envoi de la notification de présence :', err);
     }
 
     if (!isInZone) {

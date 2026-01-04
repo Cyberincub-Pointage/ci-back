@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Login',
-  description: 'Log in as Admin.',
+  friendlyName: 'Connexion administrateur',
+  description: 'Se connecter en tant qu\'administrateur.',
 
   inputs: {
     email: {
@@ -16,21 +16,21 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Login successful.'
+      description: 'Connexion réussie.'
     },
     badCombo: {
-      description: 'Invalid email or password.',
+      description: 'Email ou mot de passe incorrect.',
       statusCode: 401
     },
     accountNotActive: {
-      description: 'The account is not active.',
+      description: 'Le compte n\'est pas actif.',
       statusCode: 403
     }
   },
   fn: async function ({ email, password }) {
     const bcrypt = require('bcryptjs');
 
-    // Find the admin by email
+    // Trouver l'administrateur par email
     const admin = await Admin.findOne({ email: email.toLowerCase() });
 
     if (!admin) {
@@ -41,21 +41,21 @@ module.exports = {
       throw { accountNotActive: { message: 'Votre compte est inactif.' } };
     }
 
-    // Verify password
+    // Vérifier le mot de passe
     const passwordsMatch = await bcrypt.compare(password, admin.password);
 
     if (!passwordsMatch) {
       throw { badCombo: { message: 'Email ou mot de passe incorrect.' } };
     }
 
-    // Generate JWT
+    // Générer le JWT
     const token = await sails.helpers.generateJwt({
       id: admin.id,
       email: admin.email,
       role: admin.role
     });
 
-    // Return token and user data (excluding password)
+    // Retourner le jeton et les données utilisateur (sans le mot de passe)
     return {
       token,
       user: {

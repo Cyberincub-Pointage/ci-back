@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Create Admin',
-  description: 'Invite a new Admin.',
+  friendlyName: 'Créer un administrateur',
+  description: 'Inviter un nouvel administrateur.',
 
   inputs: {
     email: {
@@ -25,11 +25,11 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Admin invited successfully.'
+      description: 'Administrateur invité avec succès.'
     },
     emailAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided email address is already in use.',
+      description: 'L\'adresse email fournie est déjà utilisée.',
     },
     forbidden: {
       responseType: 'forbidden'
@@ -40,16 +40,16 @@ module.exports = {
     const crypto = require('crypto');
     const bcrypt = require('bcryptjs');
 
-    // Only super_admin can invite new admins
+    // Seul le super_admin peut inviter de nouveaux administrateurs
     if (this.req.me.role !== 'super_admin') {
       throw 'forbidden';
     }
 
-    // Generate invitation token
+    // Générer le jeton d'invitation
     const invitationToken = crypto.randomBytes(32).toString('hex');
-    const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 heures
 
-    // Generate a temporary random password (will be reset by user)
+    // Générer un mot de passe temporaire aléatoire
     const randomPassword = crypto.randomBytes(10).toString('hex');
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
@@ -67,7 +67,7 @@ module.exports = {
       .fetch();
 
     try {
-      // Fetch admin details of the inviter
+      // Récupérer les détails de l'invitant
       const inviter = await Admin.findOne({ id: this.req.me.id });
       const inviterName = inviter ? `${inviter.prenom} ${inviter.nom}` : 'Un administrateur';
 
@@ -88,7 +88,7 @@ module.exports = {
         }
       });
 
-      // Notify Admin
+      // Notifier l'Administrateur
       await sails.helpers.sender.notification.with({
         recipientId: this.req.me.id,
         model: 'admin',
@@ -97,10 +97,10 @@ module.exports = {
         content: `L'administrateur ${prenom} ${nom} a été invité avec succès.`,
         priority: 'normal',
         isForAdmin: true
-      }).catch(err => sails.log.error('Error sending admin notification:', err));
+      }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     } catch (error) {
-      sails.log.error('Failed to send invitation email:', error);
+      sails.log.error('Échec de l\'envoi de l\'email d\'invitation :', error);
     }
 
     return newAdmin;

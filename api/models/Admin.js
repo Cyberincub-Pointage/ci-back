@@ -63,6 +63,54 @@ module.exports = {
   },
 
   // Lifecycle avant la création
+  beforeCreate: async function (valuesToSet, proceed) {
+    if (valuesToSet.telephone) {
+      try {
+        valuesToSet.telephone = await sails.helpers.utils.formatPhoneNumber(valuesToSet.telephone);
+      } catch (err) {
+        return proceed(err);
+      }
+    }
+
+    if (valuesToSet.password) {
+      try {
+        await sails.helpers.utils.validatePassword(valuesToSet.password, 'admin');
+        const bcrypt = require('bcryptjs');
+        valuesToSet.password = await bcrypt.hash(valuesToSet.password, 10);
+      } catch (err) {
+        if (err.invalid) {
+          return proceed(new Error(err.invalid));
+        }
+        return proceed(err);
+      }
+    }
+    return proceed();
+  },
+
+  beforeUpdate: async function (valuesToSet, proceed) {
+    if (valuesToSet.telephone) {
+      try {
+        valuesToSet.telephone = await sails.helpers.utils.formatPhoneNumber(valuesToSet.telephone);
+      } catch (err) {
+        return proceed(err);
+      }
+    }
+
+    if (valuesToSet.password) {
+      try {
+        await sails.helpers.utils.validatePassword(valuesToSet.password, 'admin');
+        const bcrypt = require('bcryptjs');
+        valuesToSet.password = await bcrypt.hash(valuesToSet.password, 10);
+      } catch (err) {
+        if (err.invalid) {
+          return proceed(new Error(err.invalid));
+        }
+        return proceed(err);
+      }
+    }
+    return proceed();
+  },
+
   customToJSON: function () {
     return _.omit(this, ['password']);
   }

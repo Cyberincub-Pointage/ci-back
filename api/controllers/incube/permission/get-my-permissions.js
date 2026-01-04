@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get My Permissions',
-  description: 'Retrieve all permission requests for the logged-in incubé.',
+  friendlyName: 'Obtenir mes permissions',
+  description: 'Récupérer toutes les demandes de permission pour l\'incubé connecté.',
 
   inputs: {},
 

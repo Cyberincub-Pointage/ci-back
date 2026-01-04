@@ -1,33 +1,32 @@
 module.exports = {
-  friendlyName: 'Format phone number',
-  description: 'Validate and format a phone number to the strict format +22901xxxxxxxx.',
+  friendlyName: 'Formater le numéro de téléphone',
+  description: 'Valider et formater un numéro de téléphone au format strict +22901xxxxxxxx.',
 
   inputs: {
     phoneNumber: {
       type: 'string',
       required: true,
-      description: 'The phone number to format.'
+      description: 'Le numéro de téléphone à formater.'
     }
   },
 
   exits: {
     success: {
-      description: 'Phone number is valid and formatted.'
+      description: 'Le numéro de téléphone est valide et formaté.'
     },
     invalidFormat: {
-      description: 'The phone number format is invalid.'
+      description: 'Le format du numéro de téléphone est invalide.'
     }
   },
 
   fn: async function (inputs) {
     const { phoneNumber } = inputs;
 
-    // Remove any whitespace
+    // Supprimer les espaces
     const cleanedNumber = phoneNumber.replace(/\s+/g, '');
 
-    // Regex explanation:
-    // ^(?:\+229)? : Optional +229 prefix (non-capturing group)
-    // (01\d{8})$ : Mandatory 01 followed by exactly 8 digits. This group is captured.
+    // ^(?:\+229)? : Préfixe optionnel +229 (groupe non capturant)
+    // (01\d{8})$ : 01 obligatoire suivi de exactement 8 chiffres. Ce groupe est capturé.
     const regex = /^(?:\+229)?(01\d{8})$/;
     const match = cleanedNumber.match(regex);
 
@@ -35,8 +34,7 @@ module.exports = {
       throw 'invalidFormat';
     }
 
-    // match[1] contains the part starting with 01...
-    // We strictly prepend +229 to it.
+    // Nous ajoutons strictement +229 devant.
     const formattedNumber = `+229${match[1]}`;
 
     return formattedNumber;

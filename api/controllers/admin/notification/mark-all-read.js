@@ -1,12 +1,12 @@
 module.exports = {
-  friendlyName: 'Mark all notifications as read',
-  description: 'Mark all unread notifications for the logged-in admin as read.',
+  friendlyName: 'Marquer tout comme lu',
+  description: 'Marquer toutes les notifications non lues comme lues pour l\'administrateur connecté.',
 
   inputs: {},
 
   exits: {
     success: {
-      description: 'All notifications marked as read.'
+      description: 'Toutes les notifications ont été marquées comme lues.'
     }
   },
 
@@ -18,6 +18,6 @@ module.exports = {
       status: 'read'
     });
 
-    return { message: 'All notifications marked as read.' };
+    return { message: 'Toutes les notifications ont été marquées comme lues.' };
   }
 };

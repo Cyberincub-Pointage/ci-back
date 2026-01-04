@@ -1,33 +1,36 @@
 module.exports = {
-  friendlyName: 'Create Bank',
-  description: 'Create a new bank.',
+  friendlyName: 'Créer une banque',
+  description: 'Créer une nouvelle banque.',
+
   inputs: {
     nom: {
       type: 'string',
       required: true,
-      description: 'The name of the bank.'
+      description: 'Le nom de la banque.'
     },
     code: {
       type: 'string',
       required: true,
-      description: 'The unique code for the bank.'
+      description: 'Le code unique de la banque.'
     }
   },
+
   exits: {
     success: {
-      description: 'Bank created successfully.'
+      description: 'Banque créée avec succès.'
     },
     codeAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided bank code is already in use.'
+      description: 'Le code de banque fourni est déjà utilisé.'
     }
   },
+
   fn: async function ({ nom, code }) {
     const newBank = await Banque.create({ nom, code })
       .intercept('E_UNIQUE', 'codeAlreadyInUse')
       .fetch();
 
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -36,7 +39,7 @@ module.exports = {
       content: `La banque ${nom} (${code}) a été créée.`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return newBank;
   }

@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get Permission Email',
-  description: 'Get the email address used for permission requests.',
+  friendlyName: 'Obtenir l\'email de permission',
+  description: 'Obtenir l\'adresse email utilisée pour les demandes de permission.',
 
   inputs: {},
 
@@ -19,10 +19,10 @@ module.exports = {
       throw 'forbidden';
     }
 
-    // Fetch the single permissionEmail record
+    // Récupérer l'enregistrement
     let config = await PermissionEmail.find().limit(1);
 
-    // Provide the email from config if it exists
+    // Fournir l'email de la configuration s'il existe
     const email = (config && config.length > 0) ? config[0].value : null;
 
     return { email };

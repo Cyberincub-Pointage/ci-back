@@ -1,11 +1,11 @@
 module.exports = {
-  friendlyName: 'List Incubes',
-  description: 'List all incubes.',
+  friendlyName: 'Lister les incubés',
+  description: 'Lister tous les incubés.',
 
   inputs: {
     search: {
       type: 'string',
-      description: 'Search by name or email'
+      description: 'Rechercher par nom ou email'
     },
     status: {
       type: 'string',
@@ -15,7 +15,7 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Incubes list.'
+      description: 'Liste des incubés.'
     }
   },
 

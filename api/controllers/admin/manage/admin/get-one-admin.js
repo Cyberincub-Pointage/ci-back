@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get One Admin',
-  description: 'Get a single admin by ID.',
+  friendlyName: 'Obtenir un administrateur',
+  description: 'Obtenir un seul administrateur par ID.',
 
   inputs: {
     id: {
@@ -11,7 +11,7 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Admin found.'
+      description: 'Administrateur trouvé.'
     },
     notFound: {
       responseType: 'notFound'

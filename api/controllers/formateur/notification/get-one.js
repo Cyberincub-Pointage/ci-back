@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get One Notification',
-  description: 'Get a specific notification for the logged-in formateur.',
+  friendlyName: 'Obtenir une notification',
+  description: 'Obtenir une notification spécifique pour le formateur connecté.',
 
   inputs: {
     id: {
@@ -28,12 +28,12 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Ensure the notification belongs to this formateur
+    // S'assurer que la notification appartient à ce formateur
     if (notification.formateur !== this.req.me.id) {
       throw 'forbidden';
     }
 
-    // Mark as read if unread
+    // Marquer comme lu si non lu
     if (notification.status === 'unread') {
       await Notification.updateOne({ id }).set({ status: 'read' });
       notification.status = 'read';

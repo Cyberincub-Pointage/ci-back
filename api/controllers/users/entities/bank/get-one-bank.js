@@ -1,20 +1,20 @@
 module.exports = {
-  friendlyName: 'Get One Bank',
-  description: 'Retrieve details of a specific bank.',
+  friendlyName: 'Obtenir une banque',
+  description: 'Récupérer les détails d\'une banque spécifique.',
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the bank to retrieve.'
+      description: 'L\'ID de la banque à récupérer.'
     }
   },
   exits: {
     success: {
-      description: 'Bank details retrieved successfully.'
+      description: 'Détails de la banque récupérés avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Bank not found.'
+      description: 'Banque non trouvée.'
     }
   },
   fn: async function ({ id }) {
@@ -24,13 +24,13 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Manual population of Incubes related to this Bank
+    // Population des incubés liés à cette banque
     const incubes = await Incube.find({ banque: id })
       .populate('equipe')
       .populate('projet')
       .populate('banque');
 
-    // Attach incubes to the bank object
+    // Attacher les incubés à l'objet banque
     bank.incubes = incubes;
 
     return bank;

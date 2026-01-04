@@ -1,17 +1,17 @@
 module.exports = {
-  friendlyName: 'Validate Bank Update',
-  description: 'Validate or reject a pending bank update for an incube.',
+  friendlyName: 'Valider la mise à jour bancaire',
+  description: 'Valider ou rejeter une mise à jour bancaire en attente pour un incubé.',
 
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the incube.'
+      description: 'L\'ID de l\'incubé.'
     },
     approve: {
       type: 'boolean',
       required: true,
-      description: 'Whether to approve or reject the update.'
+      description: 'Approuver ou rejeter la mise à jour.'
     }
   },
 
@@ -33,7 +33,7 @@ module.exports = {
         return { message: 'Aucune modification en attente trouvé.' };
       }
 
-      // Apply changes
+      // Appliquer les changements
       await Incube.updateOne({ id }).set({
         rib: incube.pendingRib,
         banque: incube.pendingBanque,
@@ -41,7 +41,7 @@ module.exports = {
         pendingBanque: null
       });
 
-      // Notify Incube
+      // Notifier l'Incubé
       await sails.helpers.sender.notification.with({
         recipientId: incube.id,
         model: 'incube',
@@ -55,13 +55,13 @@ module.exports = {
       return { message: 'Informations bancaires mises à jour.' };
 
     } else {
-      // Reject changes: just clear the pending fields
+      // Rejeter les changements : effacer les champs en attente
       await Incube.updateOne({ id }).set({
         pendingRib: '',
         pendingBanque: null
       });
 
-      // Notify Incube
+      // Notifier l'Incubé
       await sails.helpers.sender.notification.with({
         recipientId: incube.id,
         model: 'incube',

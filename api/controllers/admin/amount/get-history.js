@@ -1,9 +1,8 @@
 module.exports = {
-  friendlyName: 'Get Daily Amount History',
-  description: 'Get the history of daily amount adjustments.',
+  friendlyName: 'Historique des montants journaliers',
+  description: 'Obtenir l\'historique des ajustements de montants journaliers.',
 
-  inputs: {
-  },
+  inputs: {},
 
   exits: {
     success: {

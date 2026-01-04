@@ -1,22 +1,25 @@
 module.exports = {
-  friendlyName: 'Delete Project',
-  description: 'Delete a project.',
+  friendlyName: 'Supprimer un projet',
+  description: 'Supprimer un projet.',
+
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the project to delete.'
+      description: 'L\'ID du projet à supprimer.'
     }
   },
+
   exits: {
     success: {
-      description: 'Project deleted successfully.'
+      description: 'Projet supprimé avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Project not found.'
+      description: 'Projet non trouvé.'
     }
   },
+
   fn: async function ({ id }) {
     const deletedProject = await Projet.destroyOne({ id });
 
@@ -24,8 +27,7 @@ module.exports = {
       throw 'notFound';
     }
 
-
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -34,7 +36,7 @@ module.exports = {
       content: `Le projet ${deletedProject.nom} a été supprimé.`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return deletedProject;
   }

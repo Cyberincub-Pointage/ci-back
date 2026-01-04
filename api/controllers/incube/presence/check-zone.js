@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Check Zone',
-  description: 'Check if the provided coordinates are within the allowed presence zone.',
+  friendlyName: 'Vérifier la zone',
+  description: 'Vérifier si les coordonnées fournies sont dans la zone de présence autorisée.',
 
   inputs: {
     latitude: {
@@ -23,7 +23,7 @@ module.exports = {
   },
 
   fn: async function (inputs) {
-    // Target Coordinates from config
+    // Coordonnées cibles depuis la configuration
     const { latitude: targetLat, longitude: targetLon, radius: allowedRadius } = sails.config.custom.presenceZone;
 
     const distance = await sails.helpers.geo.getDistance.with({

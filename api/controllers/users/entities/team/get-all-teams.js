@@ -1,10 +1,10 @@
 module.exports = {
-  friendlyName: 'Get All Teams',
-  description: 'Retrieve a list of all teams.',
+  friendlyName: 'Obtenir toutes les équipes',
+  description: 'Récupérer la liste de toutes les équipes.',
   inputs: {},
   exits: {
     success: {
-      description: 'List of teams retrieved successfully.'
+      description: 'Liste des équipes récupérée avec succès.'
     }
   },
   fn: async function () {

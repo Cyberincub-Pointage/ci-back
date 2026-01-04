@@ -1,13 +1,11 @@
-const { ulid } = require('ulid');
-
 module.exports.bootstrap = async function () {
 
-  // Set global appUrl based on environment
+  // Définir l'URL globale de l'application en fonction de l'environnement
   sails.config.custom.appUrl = sails.config.environment === 'production'
     ? sails.config.custom.appConfig.ci.urls.prod
     : sails.config.custom.appConfig.ci.urls.dev;
 
-  // Create default admin if not exists
+  // Créer un administrateur par défaut s'il n'existe pas
   const existingAdmin = await Admin.count({ email: sails.config.custom.admin.email });
 
   if (existingAdmin === 0) {
@@ -15,7 +13,6 @@ module.exports.bootstrap = async function () {
     const hashedPassword = await bcrypt.hash(sails.config.custom.admin.password, 10);
 
     await Admin.create({
-      id: ulid(),
       email: sails.config.custom.admin.email,
       password: hashedPassword,
       nom: sails.config.custom.admin.nom,
@@ -24,24 +21,21 @@ module.exports.bootstrap = async function () {
       status: 'active'
     });
 
-    sails.log.info('Default admin created.');
+    sails.log.info('Administrateur par défaut créé.');
   }
 
-  // Create default permission email if not exists
+  // Créer l'email de permission par défaut s'il n'existe pas
   const existingEmail = await PermissionEmail.count();
 
   if (existingEmail === 0) {
     await PermissionEmail.create({
-      id: ulid(),
       value: sails.config.custom.permissionEmail
     });
-    sails.log.info('Default permission email created.');
+    sails.log.info('Email de permission par défaut créé.');
   }
 
 
-  // -------------------------------------------------------------------------
-  // SEED TEAMS
-  // -------------------------------------------------------------------------
+  // INITIALISATION DES ÉQUIPES
   const existingEquipes = await Equipe.count();
   if (existingEquipes === 0) {
     const teamsData = [
@@ -55,15 +49,13 @@ module.exports.bootstrap = async function () {
       { nom: 'Liia', description: 'Plateforme permettant l\'analyse des fichiers journaux afin de permettre la détection des attaques.' },
       { nom: 'BJ SEC', description: 'Solution IDS accessible pour les PME.' },
       { nom: 'SAUDITERCOM', description: 'Plateforme permettant l\'auto-évaluation de la posture de sécurité d\'une entreprise.' }
-    ].map(team => ({ ...team, id: ulid() }));
+    ];
 
     await Equipe.createEach(teamsData);
-    sails.log.info(`Seeded ${teamsData.length} teams.`);
+    sails.log.info(`${teamsData.length} équipes initialisées.`);
   }
 
-  // -------------------------------------------------------------------------
-  // SEED PROJECTS
-  // -------------------------------------------------------------------------
+  // INITIALISATION DES PROJETS
   const existingProjets = await Projet.count();
   if (existingProjets === 0) {
     const projectsDefinition = [
@@ -123,30 +115,27 @@ module.exports.bootstrap = async function () {
       const equipe = await Equipe.findOne({ nom: projDef.equipeNom });
       if (equipe) {
         await Projet.create({
-          id: ulid(),
           nom: projDef.nom,
           description: projDef.description,
           equipe: equipe.id
         });
       } else {
-        sails.log.warn(`Cannot seed project ${projDef.nom}: Team ${projDef.equipeNom} not found.`);
+        sails.log.warn(`Impossible d'initialiser le projet ${projDef.nom} : L'équipe ${projDef.equipeNom} est introuvable.`);
       }
     }
-    sails.log.info(`Seeded ${projectsDefinition.length} projects.`);
+    sails.log.info(`${projectsDefinition.length} projets initialisés.`);
   }
 
-  // -------------------------------------------------------------------------
-  // SEED BANKS
-  // -------------------------------------------------------------------------
+  // INITIALISATION DES BANQUES
   const existingBanques = await Banque.count();
   if (existingBanques === 0) {
     const banksData = [
       { nom: 'ECOBANK', code: 'ECO' },
       { nom: 'UNITED BANK OF AFRICA', code: 'UBA' },
       { nom: 'BANK FOR AFRICA', code: 'BOA' }
-    ].map(bank => ({ ...bank, id: ulid() }));
+    ];
 
     await Banque.createEach(banksData);
-    sails.log.info(`Seeded ${banksData.length} banks.`);
+    sails.log.info(`${banksData.length} banques initialisées.`);
   }
 };

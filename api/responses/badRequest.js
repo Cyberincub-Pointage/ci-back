@@ -4,10 +4,10 @@ module.exports = function badRequest(data, options) {
   var statusCodeToSet = 400;
 
   if (data === undefined) {
-    sails.log.info('Ran custom response: res.badRequest()');
+    sails.log.info('Exécution de la réponse personnalisée : res.badRequest()');
     return res.sendStatus(statusCodeToSet);
   } else if (_.isError(data)) {
-    sails.log.info('Custom response `res.badRequest()` called with an Error:', data);
+    sails.log.info('Réponse personnalisée `res.badRequest()` appelée avec une erreur :', data);
 
     if (!_.isFunction(data.toJSON)) {
       if (process.env.NODE_ENV === 'production') {

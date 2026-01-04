@@ -1,30 +1,33 @@
 module.exports = {
-  friendlyName: 'Create Project',
-  description: 'Create a new project.',
+  friendlyName: 'Créer un projet',
+  description: 'Créer un nouveau projet.',
+
   inputs: {
     nom: {
       type: 'string',
       required: true,
-      description: 'The name of the project.'
+      description: 'Le nom du projet.'
     },
     description: {
       type: 'string',
-      description: 'A brief description of the project.'
+      description: 'Une brève description du projet.'
     },
     equipe: {
       type: 'string',
-      description: 'The ID of the team working on this project.'
+      description: 'L\'ID de l\'équipe travaillant sur ce projet.'
     }
   },
+
   exits: {
     success: {
-      description: 'Project created successfully.'
+      description: 'Projet créé avec succès.'
     }
   },
+
   fn: async function ({ nom, description, equipe }) {
     const newProject = await Projet.create({ nom, description, equipe }).fetch();
 
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -33,7 +36,7 @@ module.exports = {
       content: `Le projet ${nom} a été créé.`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return newProject;
   }

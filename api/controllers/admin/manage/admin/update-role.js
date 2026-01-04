@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Admin Role',
-  description: 'Update the role of an admin (e.g. promote to super_admin).',
+  friendlyName: 'Mettre à jour le rôle admin',
+  description: 'Mettre à jour le rôle d\'un administrateur (ex: promouvoir en super_admin).',
 
   inputs: {
     id: {
@@ -16,10 +16,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Admin role updated.'
+      description: 'Rôle administrateur mis à jour.'
     },
     notFound: {
-      description: 'Admin not found.',
+      description: 'Administrateur non trouvé.',
       responseType: 'notFound'
     },
     forbidden: {
@@ -39,7 +39,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Notify Admin (Me) that I updated someone else's role
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -48,7 +48,7 @@ module.exports = {
       content: `Le rôle de l'administrateur ${updatedAdmin.prenom} ${updatedAdmin.nom} a été mis à jour à "${role}".`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return updatedAdmin;
   }

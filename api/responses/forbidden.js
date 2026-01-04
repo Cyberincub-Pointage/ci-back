@@ -6,7 +6,7 @@ module.exports = function forbidden(data, options) {
   if (data === undefined) {
     return res.sendStatus(statusCodeToSet);
   } else if (_.isError(data)) {
-    sails.log.info('Custom response `res.forbidden()` called with an Error:', data);
+    sails.log.info('Réponse personnalisée `res.forbidden()` appelée avec une erreur :', data);
     if (!_.isFunction(data.toJSON)) {
       if (process.env.NODE_ENV === 'production') {
         return res.sendStatus(statusCodeToSet);

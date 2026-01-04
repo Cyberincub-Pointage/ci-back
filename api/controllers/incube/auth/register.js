@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Register',
-  description: 'Register a new Incube.',
+  friendlyName: 'Inscription',
+  description: 'Inscrire un nouvel Incubé.',
 
   inputs: {
     email: {
@@ -27,11 +27,15 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Registration successful. Verification email sent.'
+      description: 'Inscription réussie. Email de vérification envoyé.'
     },
     emailAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided email is already in use.'
+      description: 'L\'email fourni est déjà utilisé.'
+    },
+    invalidPhoneFormat: {
+      statusCode: 400,
+      description: 'Le format du numéro de téléphone est invalide.'
     }
   },
 
@@ -40,31 +44,28 @@ module.exports = {
     const bcrypt = require('bcryptjs');
 
     const emailProofToken = crypto.randomBytes(32).toString('hex');
-    const emailProofTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    const emailProofTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 heures
 
     try {
-      await sails.helpers.utils.validatePassword(password, 'incube');
+      const newIncube = await Incube.create({
+        email: email.toLowerCase(),
+        password: password,
+        nom,
+        prenom,
+        telephone,
+        status: 'pending',
+        emailProofToken,
+        emailProofTokenExpiresAt
+      }).fetch();
     } catch (err) {
-      if (err.invalid) {
-        throw new Error(err.invalid);
+      if (err.code === 'E_UNIQUE') {
+        throw 'emailAlreadyInUse';
+      }
+      if (err.message && (err.message.includes('invalidFormat') || err.message.includes('The phone number format is invalid'))) {
+        throw { invalidPhoneFormat: 'Le format du numéro de téléphone est invalide.' };
       }
       throw err;
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newIncube = await Incube.create({
-      email: email.toLowerCase(),
-      password: hashedPassword,
-      nom,
-      prenom,
-      telephone,
-      status: 'pending',
-      emailProofToken,
-      emailProofTokenExpiresAt
-    })
-      .intercept('E_UNIQUE', 'emailAlreadyInUse')
-      .fetch();
 
     try {
       const appUrls = sails.config.custom.appUrl;
@@ -82,7 +83,7 @@ module.exports = {
         }
       });
     } catch (error) {
-      sails.log.error('Failed to send verification email to new incube:', error);
+      sails.log.error('Échec de l\'envoi de l\'email de vérification au nouvel incubé :', error);
     }
 
     return {

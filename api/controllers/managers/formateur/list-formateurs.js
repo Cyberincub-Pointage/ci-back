@@ -1,11 +1,11 @@
 module.exports = {
-  friendlyName: 'List Formateurs',
-  description: 'List all Formateurs.',
+  friendlyName: 'Lister les formateurs',
+  description: 'Lister tous les formateurs.',
 
   inputs: {
     search: {
       type: 'string',
-      description: 'Search by name or email'
+      description: 'Rechercher par nom ou email'
     },
     role: {
       type: 'string',
@@ -19,7 +19,7 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'List retrieved successfully.'
+      description: 'Liste récupérée avec succès.'
     }
   },
 

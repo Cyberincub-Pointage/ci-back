@@ -1,10 +1,10 @@
 module.exports = {
-  friendlyName: 'Logout',
-  description: 'Logout as Admin.',
+  friendlyName: 'Déconnexion administrateur',
+  description: 'Se déconnecter en tant qu\'administrateur.',
 
   exits: {
     success: {
-      description: 'Logout successful.'
+      description: 'Déconnexion réussie.'
     }
   },
 

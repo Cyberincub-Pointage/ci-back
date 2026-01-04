@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'List notifications',
-  description: 'List notifications for the logged-in admin.',
+  friendlyName: 'Lister les notifications',
+  description: 'Lister les notifications pour l\'administrateur connecté.',
 
   inputs: {
     page: {

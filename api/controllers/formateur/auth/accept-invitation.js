@@ -1,18 +1,17 @@
 module.exports = {
-  friendlyName: 'Accept Invitation',
-  description: 'Accept an invitation to join as a Formateur, setting password and updating details.',
+  friendlyName: 'Accepter l\'invitation',
+  description: 'Accepter une invitation à rejoindre en tant que Formateur, définir le mot de passe et mettre à jour les détails.',
 
   inputs: {
     token: {
       type: 'string',
       required: true,
-      description: 'The invitation token from the email.'
+      description: 'Le jeton d\'invitation provenant de l\'email.'
     },
     password: {
       type: 'string',
       required: true,
-      minLength: 8,
-      description: 'The new password for the account.'
+      description: 'Le nouveau mot de passe pour le compte.'
     },
     nom: {
       type: 'string',
@@ -32,72 +31,59 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Invitation accepted successfully. User is logged in.',
+      description: 'Invitation acceptée avec succès. L\'utilisateur est connecté.',
     },
     invalidToken: {
-      description: 'The token is invalid or expired.',
+      description: 'Le jeton est invalide ou expiré.',
       responseType: 'badRequest'
     },
     emailAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided email is already in use.',
+      description: 'L\'email fourni est déjà utilisé.',
     },
   },
 
   fn: async function ({ token, password, nom, prenom, telephone, specialite }) {
-    // 1. Find the Formateur with the matching token
+    // Trouver le Formateur avec le jeton correspondant
     const formateur = await Formateur.findOne({
       invitationToken: token
     });
 
     if (!formateur) {
-      throw 'invalidToken'; // Token not found
+      throw 'invalidToken';
     }
 
-    // 2. Check for token expiration
+    // Vérifier l'expiration du jeton
     if (formateur.invitationTokenExpiresAt < Date.now()) {
-      throw 'invalidToken'; // Token expired
+      throw 'invalidToken';
     }
 
-    // 3. Update the Formateur
-    const bcrypt = require('bcryptjs');
-
-    try {
-      await sails.helpers.utils.validatePassword(password, 'formateur');
-    } catch (err) {
-      if (err.invalid) {
-        throw new Error(err.invalid);
-      }
-      throw err;
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    // Mettre à jour le Formateur
     await Formateur.updateOne({ id: formateur.id })
       .set({
-        password: hashedPassword,
+        password: password,
         nom,
         prenom,
-        telephone,
+        photoUrl,
         specialite,
         status: 'active',
-        invitationToken: '',     // Clear the token
-        invitationTokenExpiresAt: 0 // Clear expiration
+        invitationToken: '',
+        invitationTokenExpiresAt: 0,
       });
 
-    // 4. Generate JWT for auto-login
+    // Générer le JWT pour la connexion automatique
     const jwtToken = await sails.helpers.generateJwt({
       id: formateur.id,
-      email: formateur.email, // Formateur model has email
+      email: formateur.email,
       role: formateur.role
     });
 
-    // 5. Notify super_admin and inviter
+    // Notifier le super_admin et l'invitant
     try {
       const superAdmins = await Admin.find({ role: 'super_admin', status: 'active' });
       const acceptedAt = new Date().toLocaleString('fr-FR');
 
-      // Notify all super_admin
+      // Notifier tous les super_admin
       for (const superAdmin of superAdmins) {
         // Send email
         try {
@@ -115,7 +101,7 @@ module.exports = {
             }
           });
         } catch (emailErr) {
-          sails.log.error('Failed to send formateur acceptance email to super_admin:', emailErr);
+          sails.log.error('Échec de l\'envoi de l\'email d\'acceptation formateur au super_admin :', emailErr);
         }
 
         // Send notification
@@ -130,18 +116,15 @@ module.exports = {
             isForAdmin: true
           });
         } catch (notifErr) {
-          sails.log.error('Failed to send formateur acceptance notification:', notifErr);
+          sails.log.error('Échec de l\'envoi de la notification d\'acceptation formateur :', notifErr);
         }
       }
 
-      // TODO: Notify inviter if exists and is not admin
-      // This would require storing invitedBy field in Formateur model
-
     } catch (err) {
-      sails.log.error('Error notifying about formateur acceptance:', err);
+      sails.log.error('Erreur lors de la notification de l\'acceptation formateur :', err);
     }
 
-    // 6. Return success with token and user info
+    // Retourner le succès avec le jeton et les infos utilisateur
     return {
       token: jwtToken,
       user: {

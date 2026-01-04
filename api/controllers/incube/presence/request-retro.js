@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Request Retro Presence',
-  description: 'Incube requests a retroactive presence for a past date.',
+  friendlyName: 'Demander une présence rétro',
+  description: 'L\'incubé demande une présence rétroactive pour une date passée.',
 
   inputs: {
     date: {
@@ -22,7 +22,7 @@ module.exports = {
     },
     alreadyExists: {
       statusCode: 409,
-      description: 'Request already exists for this date.'
+      description: 'Une demande existe déjà pour cette date.'
     }
   },
 
@@ -33,7 +33,7 @@ module.exports = {
     if (inputs.date !== yesterday) { }
 
     try {
-      // Check existing request
+      // Vérifier la demande existante
       const existing = await RetroPresenceRequest.findOne({
         incube: incubeId,
         date: inputs.date,
@@ -41,11 +41,11 @@ module.exports = {
       });
 
       if (existing) {
-        sails.log.debug(`RetroPresence: Request already exists for ${incubeId} on ${inputs.date}`);
+        sails.log.debug(`RetroPresence : Demande existante pour ${incubeId} le ${inputs.date}`);
         throw 'alreadyExists';
       }
 
-      // Check if presence actually exists already
+      // Vérifier si la présence existe déjà
       const existingPresence = await Presence.findOne({
         incube: incubeId,
         date: inputs.date,
@@ -53,7 +53,7 @@ module.exports = {
       });
 
       if (existingPresence) {
-        sails.log.debug(`RetroPresence: Validated presence already exists for ${incubeId} on ${inputs.date}`);
+        sails.log.debug(`RetroPresence : Présence validée existante pour ${incubeId} le ${inputs.date}`);
         throw { badRequest: 'Une présence validée existe déjà pour cette date.' };
       }
 
@@ -65,9 +65,9 @@ module.exports = {
         validatedAt: null
       }).fetch();
 
-      sails.log.info(`RetroPresence: Created request ${request.id}`);
+      sails.log.info(`RetroPresence : Demande créée ${request.id}`);
 
-      // Notify incubé
+      // Notifier l'incubé
       try {
         await sails.helpers.sender.notification.with({
           recipientId: incubeId,
@@ -79,7 +79,7 @@ module.exports = {
           isForAdmin: false
         });
       } catch (err) {
-        sails.log.error('Error sending retro request notification:', err);
+        sails.log.error('Erreur lors de l\'envoi de la notification de demande rétro :', err);
       }
 
       return request;

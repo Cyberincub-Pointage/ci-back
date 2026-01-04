@@ -1,11 +1,11 @@
 module.exports = {
-  friendlyName: 'Get All Admins',
-  description: 'Get all admins with optional filtering.',
+  friendlyName: 'Obtenir tous les administrateurs',
+  description: 'Obtenir tous les administrateurs avec un filtrage optionnel.',
 
   inputs: {
     search: {
       type: 'string',
-      description: 'Search by name or email'
+      description: 'Recherche par nom ou email'
     },
     role: {
       type: 'string',

@@ -1,18 +1,17 @@
 module.exports = {
-  friendlyName: 'Accept Invitation',
-  description: 'Accept an invitation to join as an Admin, setting password and updating details.',
+  friendlyName: 'Accepter l\'invitation',
+  description: 'Accepter une invitation pour rejoindre en tant qu\'Administrateur, définir le mot de passe et mettre à jour les détails.',
 
   inputs: {
     token: {
       type: 'string',
       required: true,
-      description: 'The invitation token from the email.'
+      description: 'Le jeton d\'invitation reçu par email.'
     },
     password: {
       type: 'string',
       required: true,
-      minLength: 8,
-      description: 'The new password for the account.'
+      description: 'Le nouveau mot de passe pour le compte.'
     },
     nom: {
       type: 'string',
@@ -29,72 +28,59 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Invitation accepted successfully. User is logged in.',
+      description: 'Invitation acceptée avec succès. L\'utilisateur est connecté.',
     },
     invalidToken: {
-      description: 'The token is invalid or expired.',
+      description: 'Le jeton est invalide ou expiré.',
       responseType: 'badRequest'
     },
     emailAlreadyInUse: {
       statusCode: 409,
-      description: 'The provided email is already in use.',
+      description: 'L\'adresse email fournie est déjà utilisée.',
     },
   },
 
   fn: async function ({ token, password, nom, prenom, photoUrl }) {
-    // 1. Find the Admin with the matching token
+    // Trouver l'Administrateur avec le jeton correspondant
     const admin = await Admin.findOne({
       invitationToken: token
     });
 
     if (!admin) {
-      throw 'invalidToken'; // Token not found
+      throw 'invalidToken';
     }
 
-    // 2. Check for token expiration
+    // Vérifier l'expiration du jeton
     if (admin.invitationTokenExpiresAt < Date.now()) {
-      throw 'invalidToken'; // Token expired
+      throw 'invalidToken';
     }
 
-    // 3. Update the Admin
-    const bcrypt = require('bcryptjs');
-
-    try {
-      await sails.helpers.utils.validatePassword(password, 'admin');
-    } catch (err) {
-      if (err.invalid) {
-        throw new Error(err.invalid);
-      }
-      throw err;
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    // Mettre à jour l'Administrateur
     await Admin.updateOne({ id: admin.id })
       .set({
-        password: hashedPassword,
+        password: password,
         nom,
         prenom,
         photoUrl,
         status: 'active',
-        invitationToken: '',     // Clear the token
-        invitationTokenExpiresAt: 0 // Clear expiration
+        invitationToken: '',
+        invitationTokenExpiresAt: 0,
       });
 
-    // 4. Generate JWT for auto-login
+    // Générer le JWT pour la connexion automatique
     const jwtToken = await sails.helpers.generateJwt({
       id: admin.id,
       email: admin.email,
       role: admin.role
     });
 
-    // 5. Notify all super_admin
+    // Notifier tous les super_admin
     try {
       const superAdmins = await Admin.find({ role: 'super_admin', status: 'active' });
       const acceptedAt = new Date().toLocaleString('fr-FR');
 
       for (const superAdmin of superAdmins) {
-        // Send email
+        // Envoyer l'email
         try {
           await sails.helpers.sender.email.with({
             layout: 'default-layout',
@@ -113,7 +99,7 @@ module.exports = {
           sails.log.error('Failed to send admin acceptance email:', emailErr);
         }
 
-        // Send notification
+        // Envoyer une notification
         try {
           await sails.helpers.sender.notification.with({
             recipientId: superAdmin.id,
@@ -125,14 +111,14 @@ module.exports = {
             isForAdmin: true
           });
         } catch (notifErr) {
-          sails.log.error('Failed to send admin acceptance notification:', notifErr);
+          sails.log.error('Échec de l\'envoi de la notification d\'acceptation admin :', notifErr);
         }
       }
     } catch (err) {
-      sails.log.error('Error notifying super admins:', err);
+      sails.log.error('Erreur lors de la notification des super admins :', err);
     }
 
-    // 6. Return success with token and user info
+    // Retourner le succès avec le jeton et les infos utilisateur
     return {
       token: jwtToken,
       user: {

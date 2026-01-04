@@ -1,26 +1,26 @@
 module.exports = {
-  friendlyName: 'Delete Notification',
-  description: 'Delete a specific notification for the logged-in formateur.',
+  friendlyName: 'Supprimer une notification',
+  description: 'Supprimer une notification spécifique pour le formateur connecté.',
 
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the notification to delete.'
+      description: 'L\'ID de la notification à supprimer.'
     }
   },
 
   exits: {
     success: {
-      description: 'Notification deleted successfully.'
+      description: 'Notification supprimée avec succès.'
     },
     notFound: {
       responseType: 'notFound',
-      description: 'Notification not found.'
+      description: 'Notification non trouvée.'
     },
     forbidden: {
       responseType: 'forbidden',
-      description: 'Notification does not belong to the formateur.'
+      description: 'La notification n\'appartient pas au formateur.'
     }
   },
 
@@ -31,7 +31,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Ensure the notification belongs to this formateur
+    // S'assurer que la notification appartient à ce formateur
     if (notification.formateur !== this.req.me.id) {
       throw 'forbidden';
     }

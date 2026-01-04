@@ -1,7 +1,7 @@
 module.exports = {
 
-  friendlyName: 'Create warning',
-  description: 'Create a new warning for an incube.',
+  friendlyName: 'Créer un avertissement',
+  description: 'Créer un nouvel avertissement pour un incubé.',
 
   inputs: {
     incubeId: {
@@ -44,7 +44,7 @@ module.exports = {
       date: inputs.date
     }).fetch();
 
-    // Notify incubé
+    // Notifier l'incubé
     try {
       const incube = await Incube.findOne({ id: inputs.incubeId });
       if (incube) {
@@ -59,10 +59,10 @@ module.exports = {
         });
       }
     } catch (err) {
-      sails.log.error('Error sending warning notification to incubé:', err);
+      sails.log.error('Erreur lors de l\'envoi de la notification d\'avertissement à l\'incubé :', err);
     }
 
-    // Notify formateur (confirmation)
+    // Notifier le formateur (confirmation)
     try {
       await sails.helpers.sender.notification.with({
         recipientId: this.req.me.id,
@@ -74,7 +74,7 @@ module.exports = {
         isForAdmin: false
       });
     } catch (err) {
-      sails.log.error('Error sending warning confirmation to formateur:', err);
+      sails.log.error('Erreur lors de l\'envoi de la confirmation d\'avertissement au formateur :', err);
     }
 
     return newWarning;

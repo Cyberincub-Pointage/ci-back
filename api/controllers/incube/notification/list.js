@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'List notifications',
-  description: 'List notifications for the logged-in incube.',
+  friendlyName: 'Lister les notifications',
+  description: 'Lister les notifications pour l\'incubé connecté.',
 
   inputs: {
     page: {

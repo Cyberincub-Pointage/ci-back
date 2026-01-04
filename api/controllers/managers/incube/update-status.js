@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Update Incube Status',
-  description: 'Activate or deactivate an Incube.',
+  friendlyName: 'Mettre à jour le statut de l\'incubé',
+  description: 'Activer ou désactiver un incubé.',
 
   inputs: {
     id: {
@@ -16,10 +16,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Incube status updated.'
+      description: 'Statut de l\'incubé mis à jour.'
     },
     notFound: {
-      description: 'Incube not found.',
+      description: 'Incubé non trouvé.',
       responseType: 'notFound'
     }
   },
@@ -32,7 +32,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Notify Admin
+    // Notifier l'admin
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -41,7 +41,7 @@ module.exports = {
       content: `Le statut de l'incubé ${updatedIncube.prenom} ${updatedIncube.nom} a été mis à jour à "${status}".`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification à l\'admin :', err));
 
     return updatedIncube;
   }

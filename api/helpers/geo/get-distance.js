@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get Distance',
-  description: 'Calculate distance between two coordinates using Haversine formula.',
+  friendlyName: 'Obtenir la distance',
+  description: 'Calculer la distance entre deux coordonnées en utilisant la formule de Haversine.',
   inputs: {
     lat1: {
       type: 'number',
@@ -21,7 +21,7 @@ module.exports = {
   },
   exits: {
     success: {
-      outputFriendlyName: 'Distance in meters',
+      outputFriendlyName: 'Distance en mètres',
       outputType: 'number'
     }
   },

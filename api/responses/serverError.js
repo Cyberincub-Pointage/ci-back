@@ -4,10 +4,10 @@ module.exports = function serverError(data, options) {
   var statusCodeToSet = 500;
 
   if (data === undefined) {
-    sails.log.error('Ran custom response: res.serverError()');
+    sails.log.error('Exécution de la réponse personnalisée : res.serverError()');
     return res.sendStatus(statusCodeToSet);
   } else if (_.isError(data)) {
-    sails.log.error('Custom response `res.serverError()` called with an Error:', data);
+    sails.log.error('Réponse personnalisée `res.serverError()` appelée avec une erreur :', data);
     if (!_.isFunction(data.toJSON)) {
       if (process.env.NODE_ENV === 'production') {
         return res.sendStatus(statusCodeToSet);

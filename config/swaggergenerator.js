@@ -11,7 +11,7 @@ module.exports['swagger-generator'] = {
       version: '1.0.0',
       contact: {
         name: 'CyberIncub Support',
-        email: 'cyberincub@gmail.com',
+        email: 'contact@cyberincub.bj',
         url: 'https://cyberincub.io'
       },
       license: {

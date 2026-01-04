@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get One Permission (Formateur)',
-  description: 'Retrieve a single permission request by ID for a formateur and mark it as viewed if pending.',
+  friendlyName: 'Obtenir une permission (Formateur)',
+  description: 'Récupérer une demande de permission par ID pour un formateur et la marquer comme vue si elle est en attente.',
 
   inputs: {
     id: {
@@ -19,7 +19,7 @@ module.exports = {
   },
 
   fn: async function (inputs) {
-    // 1. Fetch the permission with necessary associations
+    // Récupérer la permission
     const permission = await PermissionRequest.findOne({ id: inputs.id })
       .populate('incube')
       .populate('processedBy');
@@ -28,9 +28,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // 2. Check if it needs to be marked as viewed
-    // Only update if status is 'pending'. 
-    // If it's already 'viewed', 'approved', or 'rejected', we don't change status.
+    // Mettre à jour seulement si le statut est 'pending'.
     if (permission.status === 'pending') {
       const now = new Date().toISOString();
 
@@ -40,12 +38,8 @@ module.exports = {
           viewedAt: now
         });
 
-      // Update the in-memory object to reflect simple changes without re-fetching
       permission.status = 'viewed';
       permission.viewedAt = now;
-
-      // Log the action (optional/useful debugging)
-      // sails.log.info(`Permission ${inputs.id} marked as viewed by formateur.`);
     }
 
     return permission;

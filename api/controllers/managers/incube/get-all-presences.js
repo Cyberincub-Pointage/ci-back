@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get All Presences',
-  description: 'Get all presences, optionally filtered by date range, incube, or status.',
+  friendlyName: 'Obtenir toutes les présences',
+  description: 'Obtenir toutes les présences, optionnellement filtrées par date, incubé ou statut.',
 
   inputs: {
     startDate: {

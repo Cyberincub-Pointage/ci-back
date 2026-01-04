@@ -1,22 +1,25 @@
 module.exports = {
-  friendlyName: 'Delete Bank',
-  description: 'Delete a bank.',
+  friendlyName: 'Supprimer une banque',
+  description: 'Supprimer une banque.',
+
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the bank to delete.'
+      description: 'L\'ID de la banque à supprimer.'
     }
   },
+
   exits: {
     success: {
-      description: 'Bank deleted successfully.'
+      description: 'Banque supprimée avec succès.'
     },
     notFound: {
       statusCode: 404,
-      description: 'Bank not found.'
+      description: 'Banque non trouvée.'
     }
   },
+
   fn: async function ({ id }) {
     const deletedBank = await Banque.destroyOne({ id });
 
@@ -24,8 +27,7 @@ module.exports = {
       throw 'notFound';
     }
 
-
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',
@@ -34,7 +36,7 @@ module.exports = {
       content: `La banque ${deletedBank.nom} a été supprimée.`,
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending admin notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification administrateur :', err));
 
     return deletedBank;
   }

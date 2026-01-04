@@ -1,19 +1,11 @@
 module.exports = {
-
-
-  friendlyName: 'Serve Swagger',
-
-
-  description: 'Serve the swagger.json file.',
-
+  friendlyName: 'Servir Swagger',
+  description: 'Servir le fichier swagger.json.',
 
   inputs: {},
 
-
   exits: {
-    success: {
-      // Default response
-    },
+    success: {},
     notFound: { statusCode: 404 }
   },
 
@@ -29,10 +21,10 @@ module.exports = {
 
     const content = fs.readFileSync(swaggerPath, 'utf8');
 
-    // Parse to ensure it's valid JSON
+    // S'assurer que c'est un JSON valide
     const json = JSON.parse(content);
 
-    // Set headers manually
+    // Définir les en-têtes
     this.res.set('Content-Type', 'application/json');
     return json;
   }

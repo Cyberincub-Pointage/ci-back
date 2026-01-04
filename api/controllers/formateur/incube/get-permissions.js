@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get Permissions',
-  description: 'Formateur retrieves all permission requests, optionally filtered by status.',
+  friendlyName: 'Obtenir les permissions',
+  description: 'Le formateur récupère toutes les demandes de permission, filtrées optionnellement par statut.',
 
   inputs: {
     status: {

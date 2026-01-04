@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Reset Password',
-  description: 'Reset Admin password using a valid token.',
+  friendlyName: 'Réinitialiser le mot de passe',
+  description: 'Réinitialiser le mot de passe Administrateur en utilisant un jeton valide.',
 
   inputs: {
     token: {
@@ -15,11 +15,15 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Password reset successful.'
+      description: 'Réinitialisation du mot de passe réussie.'
     },
     invalidToken: {
-      description: 'Invalid or expired token.',
-      responseType: 'badRequest'
+      description: 'Jeton invalide ou expiré.',
+      statusCode: 400
+    },
+    passwordFormatInvalid: {
+      statusCode: 400,
+      description: 'Le format du mot de passe est invalide.'
     }
   },
 
@@ -31,24 +35,32 @@ module.exports = {
       passwordResetTokenExpiresAt: { '>': Date.now() }
     });
 
-    if (!admin) { throw 'invalidToken'; }
+    if (!admin) { throw { invalidToken: 'Jeton invalide ou expiré.' }; }
 
     try {
-      await sails.helpers.utils.validatePassword(password, 'admin');
+      await Admin.updateOne({ id: admin.id }).set({
+        password: password,
+        passwordResetToken: '',
+        passwordResetTokenExpiresAt: 0
+      });
     } catch (err) {
+      if (err.message) {
+        if (err.message.includes('Le mot de passe doit contenir') || (err.invalid && err.invalid.includes('Le mot de passe'))) {
+          const msg = err.invalid || err.message;
+          if (msg.includes('Le mot de passe doit contenir')) {
+            throw { passwordFormatInvalid: msg.includes('Error: ') ? msg.split('Error: ')[1] : msg };
+          }
+        }
+        if (err.raw && err.raw.invalid) {
+          throw { passwordFormatInvalid: err.raw.invalid };
+        }
+      }
+
       if (err.invalid) {
-        throw new Error(err.invalid);
+        throw { passwordFormatInvalid: err.invalid };
       }
       throw err;
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    await Admin.updateOne({ id: admin.id }).set({
-      password: hashedPassword,
-      passwordResetToken: '',
-      passwordResetTokenExpiresAt: 0
-    });
 
     // Notify admin
     await sails.helpers.sender.notification.with({
@@ -59,7 +71,7 @@ module.exports = {
       content: 'Votre mot de passe a été réinitialisé avec succès.',
       priority: 'normal',
       isForAdmin: true
-    }).catch(err => sails.log.error('Error sending reset password notification:', err));
+    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification de réinitialisation de mot de passe :', err));
 
     return {
       message: 'Mot de passe réinitialisé avec succès'

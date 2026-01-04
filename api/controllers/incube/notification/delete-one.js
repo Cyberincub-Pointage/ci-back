@@ -1,26 +1,26 @@
 module.exports = {
-  friendlyName: 'Delete Notification',
-  description: 'Delete a specific notification for the logged-in incube.',
+  friendlyName: 'Supprimer une notification',
+  description: 'Supprimer une notification spécifique pour l\'incubé connecté.',
 
   inputs: {
     id: {
       type: 'string',
       required: true,
-      description: 'The ID of the notification to delete.'
+      description: 'L\'ID de la notification à supprimer.'
     }
   },
 
   exits: {
     success: {
-      description: 'Notification deleted successfully.'
+      description: 'Notification supprimée avec succès.'
     },
     notFound: {
       responseType: 'notFound',
-      description: 'Notification not found.'
+      description: 'Notification non trouvée.'
     },
     forbidden: {
       responseType: 'forbidden',
-      description: 'Notification does not belong to the incube.'
+      description: 'La notification n\'appartient pas à l\'incubé.'
     }
   },
 
@@ -31,7 +31,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Ensure the notification belongs to this incube
+    // S'assurer que la notification appartient à cet incubé
     if (notification.incube !== this.req.me.id) {
       throw 'forbidden';
     }

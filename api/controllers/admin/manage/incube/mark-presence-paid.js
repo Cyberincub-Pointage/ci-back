@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Mark Paid',
-  description: 'Mark a presence as paid.',
+  friendlyName: 'Marquer comme payé',
+  description: 'Marquer une présence comme payée.',
 
   inputs: {
     presenceId: {
@@ -25,10 +25,10 @@ module.exports = {
 
     if (!updated) { throw 'notFound'; }
 
-    // Fetch Incube for notification
+    // Récupérer l'incubé pour la notification
     const incube = await Incube.findOne({ id: updated.incube });
 
-    // Notify Admin
+    // Notifier l'Administrateur
     await sails.helpers.sender.notification.with({
       recipientId: this.req.me.id,
       model: 'admin',

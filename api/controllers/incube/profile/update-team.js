@@ -1,12 +1,12 @@
 module.exports = {
-  friendlyName: 'Update Team',
-  description: 'Update team for the logged-in incube.',
+  friendlyName: 'Mettre à jour l\'équipe',
+  description: 'Mettre à jour l\'équipe pour l\'incubé connecté.',
 
   inputs: {
     equipe: {
       type: 'string',
       required: true,
-      description: 'The ID of the new team.'
+      description: 'L\'ID de la nouvelle équipe.'
     }
   },
 
@@ -28,15 +28,12 @@ module.exports = {
     const isTeamEmpty = !incube.equipe;
 
     if (!isTeamEmpty) {
-      // Modification: Save to pending
+      // Modification : Sauvegarder en attente
       await Incube.updateOne({ id: incubeId }).set({
         pendingEquipe: equipe
       });
 
-      // Notify Formateurs
-      // We might want to notify formateurs associated with the NEW team or ALL formateurs.
-      // Usually, it's better to notify "Formateur Principal" or similar. 
-      // For now, I'll fetch all formateurs.
+      // Notifier les formateurs
       const formateurs = await Formateur.find();
 
       for (const formateur of formateurs) {
@@ -48,13 +45,13 @@ module.exports = {
           content: `L'incubé ${incube.prenom} ${incube.nom} souhaite modifier son équipe.`,
           priority: 'normal',
           isForAdmin: false
-        }).catch(err => sails.log.error('Failed to notify formateur:', err));
+        }).catch(err => sails.log.error('Échec de la notification du formateur :', err));
       }
 
       return { message: 'Demande de changement d\'équipe envoyée pour validation.', status: 'pending' };
 
     } else {
-      // Direct update
+      // Mise à jour directe
       await Incube.updateOne({ id: incubeId }).set({
         equipe: equipe
       });

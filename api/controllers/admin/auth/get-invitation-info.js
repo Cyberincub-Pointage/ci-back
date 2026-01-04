@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get Invitation Info',
-  description: 'Get basic user info associated with an invitation token.',
+  friendlyName: 'Infos de l\'invitation',
+  description: 'Obtenir les informations utilisateur associées à un jeton d\'invitation.',
 
   inputs: {
     token: {
@@ -11,10 +11,10 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Info retrieved.'
+      description: 'Informations récupérées.'
     },
     invalidToken: {
-      description: 'Token invalid or expired.',
+      description: 'Jeton invalide ou expiré.',
       responseType: 'badRequest'
     }
   },

@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get One Formateur',
-  description: 'Get a single formateur by ID.',
+  friendlyName: 'Obtenir un formateur',
+  description: 'Obtenir un formateur unique par ID.',
 
   inputs: {
     id: {
@@ -11,7 +11,7 @@ module.exports = {
 
   exits: {
     success: {
-      description: 'Formateur found.'
+      description: 'Formateur trouvé.'
     },
     notFound: {
       responseType: 'notFound'

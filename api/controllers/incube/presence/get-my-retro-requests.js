@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get My Retro Requests',
-  description: 'Get retro presence requests for the currently logged-in incube.',
+  friendlyName: 'Obtenir mes demandes rétro',
+  description: 'Obtenir les demandes de présence rétroactive pour l\'incubé connecté.',
 
   inputs: {},
 

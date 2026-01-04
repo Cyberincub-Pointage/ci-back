@@ -1,27 +1,27 @@
 module.exports = {
-  friendlyName: 'Validate password',
-  description: 'Validate password strength based on user role.',
+  friendlyName: 'Valider le mot de passe',
+  description: 'Valider la force du mot de passe en fonction du rôle de l\'utilisateur.',
 
   inputs: {
     password: {
       type: 'string',
       required: true,
-      description: 'The password to validate.'
+      description: 'Le mot de passe à valider.'
     },
     role: {
       type: 'string',
       defaultsTo: 'incube',
       isIn: ['admin', 'formateur', 'incube'],
-      description: 'The role of the user to determine validation criteria.'
+      description: 'Le rôle de l\'utilisateur pour déterminer les critères de validation.'
     }
   },
 
   exits: {
     success: {
-      description: 'Password is valid.'
+      description: 'Le mot de passe est valide.'
     },
     invalid: {
-      description: 'Password does not meet the criteria.'
+      description: 'Le mot de passe ne respecte pas les critères.'
     }
   },
 
@@ -30,7 +30,7 @@ module.exports = {
     let isValid = false;
     let message = '';
 
-    // Regex parts
+    // Parties Regex
     const upper = /[A-Z]/g;
     const lower = /[a-z]/g;
     const digit = /\d/g;

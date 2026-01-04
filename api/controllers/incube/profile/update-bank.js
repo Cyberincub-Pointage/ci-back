@@ -1,17 +1,17 @@
 module.exports = {
-  friendlyName: 'Update Bank Info',
-  description: 'Update bank info (rib and bank) for the logged-in incube.',
+  friendlyName: 'Mettre à jour les infos bancaires',
+  description: 'Mettre à jour les informations bancaires (RIB et banque) pour l\'incubé connecté.',
 
   inputs: {
     rib: {
       type: 'string',
       required: true,
-      description: 'The new RIB.'
+      description: 'Le nouveau RIB.'
     },
     banque: {
       type: 'string',
       required: true,
-      description: 'The ID of the new bank.'
+      description: 'L\'ID de la nouvelle banque.'
     }
   },
 
@@ -30,7 +30,7 @@ module.exports = {
   fn: async function ({ rib, banque }) {
     const incubeId = this.req.me.id;
 
-    // Fetch current incube data
+    // Récupérer les données actuelles de l\'incubé
     const incube = await Incube.findOne({ id: incubeId });
     if (!incube) { throw 'notFound'; }
 
@@ -38,18 +38,13 @@ module.exports = {
     const isModification = !isBankEmpty;
 
     if (isModification) {
-      // Modification: Save to pending fields
+      // Modification : Sauvegarder dans les champs en attente
       await Incube.updateOne({ id: incubeId }).set({
         pendingRib: rib,
         pendingBanque: banque
       });
 
-      // Notify ALL Admins about the request (or specific admins if logic existed)
-      // For now, we'll try to find admins. Ideally, we might notify a "super_admin" or just log it.
-      // Since the requirement says "notify admin", we'll attempt to send a notification to admins.
-
       const admins = await Admin.find();
-      // This could be spammy if many admins, but standard for now.
 
       for (const admin of admins) {
         await sails.helpers.sender.notification.with({
@@ -60,13 +55,13 @@ module.exports = {
           content: `L'incubé ${incube.prenom} ${incube.nom} a demandé une modification de ses infos bancaires.`,
           priority: 'urgent',
           isForAdmin: true
-        }).catch(err => sails.log.error('Failed to notify admin about bank update:', err));
+        }).catch(err => sails.log.error('Échec de la notification de l\'admin pour la mise à jour bancaire :', err));
       }
 
       return { message: 'Demande de modification envoyée à l\'admin pour validation.', status: 'pending' };
 
     } else {
-      // Direct update (First time)
+      // Mise à jour directe (Première fois)
       await Incube.updateOne({ id: incubeId }).set({
         rib: rib,
         banque: banque

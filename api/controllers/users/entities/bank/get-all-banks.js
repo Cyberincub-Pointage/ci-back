@@ -1,10 +1,10 @@
 module.exports = {
-  friendlyName: 'Get All Banks',
-  description: 'Retrieve a list of all banks.',
+  friendlyName: 'Obtenir toutes les banques',
+  description: 'Récupérer la liste de toutes les banques.',
   inputs: {},
   exits: {
     success: {
-      description: 'List of banks retrieved successfully.'
+      description: 'Liste des banques récupérée avec succès.'
     }
   },
   fn: async function () {

@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Validate Retro Request',
-  description: 'Formateur validates or rejects a retro presence request.',
+  friendlyName: 'Valider une demande rétro',
+  description: 'Le formateur valide ou rejette une demande de présence rétroactive.',
 
   inputs: {
     requestId: {
@@ -43,7 +43,7 @@ module.exports = {
 
     await RetroPresenceRequest.updateOne({ id: inputs.requestId }).set(updates);
 
-    // If approved, create the actual Presence record
+    // Si approuvé, créer l'enregistrement de présence réel
     if (inputs.approved) {
       const currentConfig = await DailyAmount.find({
         effectiveDate: { '<=': request.date }
@@ -66,7 +66,7 @@ module.exports = {
       });
     }
 
-    // Notify incubé
+    // Notifier l'incubé
     try {
       await sails.helpers.sender.notification.with({
         recipientId: request.incube,
@@ -80,7 +80,7 @@ module.exports = {
         isForAdmin: false
       });
     } catch (err) {
-      sails.log.error('Error sending retro validation notification:', err);
+      sails.log.error('Erreur lors de l\'envoi de la notification de validation rétro :', err);
     }
 
     return { success: true };

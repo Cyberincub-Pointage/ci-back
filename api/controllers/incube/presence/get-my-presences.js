@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get My Presences',
-  description: 'Get presences for the currently logged-in incube.',
+  friendlyName: 'Obtenir mes présences',
+  description: 'Obtenir les présences pour l\'incubé connecté.',
 
   inputs: {
     startDate: { type: 'string' },

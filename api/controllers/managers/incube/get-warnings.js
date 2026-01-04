@@ -1,7 +1,7 @@
 module.exports = {
 
-  friendlyName: 'Get warnings',
-  description: 'Get warnings created by the logged in formateur.',
+  friendlyName: 'Obtenir les avertissements',
+  description: 'Obtenir les avertissements créés par le formateur connecté.',
 
   inputs: {
     incubeId: {

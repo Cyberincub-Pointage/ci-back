@@ -11,7 +11,7 @@ module.exports = async function (req, res, next) {
   }
 
   if (!token) {
-    return res.status(401).json({ error: 'No authorization token was found' });
+    return res.status(401).json({ error: 'Aucun jeton d\'autorisation n\'a été trouvé' });
   }
 
   try {
@@ -19,6 +19,6 @@ module.exports = async function (req, res, next) {
     req.me = decoded;
     return next();
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid token' });
+    return res.status(401).json({ error: 'Jeton invalide' });
   }
 };

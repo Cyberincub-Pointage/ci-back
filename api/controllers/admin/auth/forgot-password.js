@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Forgot Password',
-  description: 'Initiate password reset process for Admin.',
+  friendlyName: 'Mot de passe oublié',
+  description: 'Initier le processus de réinitialisation de mot de passe pour l\'Administrateur.',
 
   inputs: {
     email: {
@@ -11,7 +11,7 @@ module.exports = {
   },
   exits: {
     success: {
-      description: 'If email exists, reset link sent.'
+      description: 'Si l\'email existe, le lien de réinitialisation est envoyé.'
     }
   },
 
@@ -24,7 +24,7 @@ module.exports = {
     }
 
     const passwordResetToken = crypto.randomBytes(32).toString('hex');
-    const passwordResetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+    const passwordResetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 heure
 
     await Admin.updateOne({ id: admin.id }).set({
       passwordResetToken,
@@ -47,7 +47,7 @@ module.exports = {
         }
       });
     } catch (error) {
-      sails.log.error('Failed to send password reset email:', error);
+      sails.log.error('Échec de l\'envoi de l\'email de réinitialisation de mot de passe :', error);
     }
 
     return;

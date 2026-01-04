@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Get One Permission',
-  description: 'Retrieve a single permission request by ID for the logged-in incubé.',
+  friendlyName: 'Obtenir une permission',
+  description: 'Récupérer une demande de permission unique par ID pour l\'incubé connecté.',
 
   inputs: {
     id: {
@@ -31,7 +31,7 @@ module.exports = {
       throw 'notFound';
     }
 
-    // Verify ownership
+    // Vérifier la propriété
     if (permission.incube !== incubeId) {
       throw 'forbidden';
     }
