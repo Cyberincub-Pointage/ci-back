@@ -32,22 +32,22 @@ module.exports = {
   },
   fn: async function ({ email, nom, prenom, role }) {
     const crypto = require('crypto');
-    const bcrypt = require('bcryptjs');
+    // const bcrypt = require('bcryptjs');
 
     // Générer le token d'invitation
     const invitationToken = crypto.randomBytes(32).toString('hex');
     const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 heures
 
-    // Générer un mot de passe temporaire aléatoire
-    const randomPassword = crypto.randomBytes(10).toString('hex');
-    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+    // Générer un mot de passe temporaire
+    const basePassword = crypto.randomBytes(10).toString('hex');
+    const compliantPassword = 'AB!@' + basePassword + '12';
 
     const newFormateur = await Formateur.create({
       email: email.toLowerCase(),
       nom,
       prenom,
       role: role,
-      password: hashedPassword,
+      password: compliantPassword,
       status: 'pending',
       invitationToken: invitationToken,
       invitationTokenExpiresAt: invitationTokenExpiresAt

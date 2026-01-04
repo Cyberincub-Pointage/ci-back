@@ -9,12 +9,10 @@ module.exports.bootstrap = async function () {
   const existingAdmin = await Admin.count({ email: sails.config.custom.admin.email });
 
   if (existingAdmin === 0) {
-    const bcrypt = require('bcryptjs');
-    const hashedPassword = await bcrypt.hash(sails.config.custom.admin.password, 10);
-
+    // Note: Le hashage est géré par le lifecycle beforeCreate du modèle Admin
     await Admin.create({
       email: sails.config.custom.admin.email,
-      password: hashedPassword,
+      password: sails.config.custom.admin.password,
       nom: sails.config.custom.admin.nom,
       prenom: sails.config.custom.admin.prenom,
       role: 'super_admin',

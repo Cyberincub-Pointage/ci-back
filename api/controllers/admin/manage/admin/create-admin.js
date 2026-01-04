@@ -38,7 +38,7 @@ module.exports = {
 
   fn: async function ({ email, nom, prenom, role }) {
     const crypto = require('crypto');
-    const bcrypt = require('bcryptjs');
+    // const bcrypt = require('bcryptjs');
 
     // Seul le super_admin peut inviter de nouveaux administrateurs
     if (this.req.me.role !== 'super_admin') {
@@ -50,15 +50,15 @@ module.exports = {
     const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 heures
 
     // Générer un mot de passe temporaire aléatoire
-    const randomPassword = crypto.randomBytes(10).toString('hex');
-    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+    const basePassword = crypto.randomBytes(10).toString('hex');
+    const compliantPassword = 'AB!@' + basePassword + '12';
 
     const newAdmin = await Admin.create({
       email: email.toLowerCase(),
       nom,
       prenom,
       role: role,
-      password: hashedPassword,
+      password: compliantPassword,
       status: 'pending',
       invitationToken: invitationToken,
       invitationTokenExpiresAt: invitationTokenExpiresAt
