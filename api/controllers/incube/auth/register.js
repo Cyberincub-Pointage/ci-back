@@ -36,6 +36,10 @@ module.exports = {
     invalidPhoneFormat: {
       statusCode: 400,
       description: 'Le format du numéro de téléphone est invalide.'
+    },
+    passwordFormatInvalid: {
+      statusCode: 400,
+      description: 'Le format du mot de passe est invalide.'
     }
   },
 
@@ -61,9 +65,25 @@ module.exports = {
       if (err.code === 'E_UNIQUE') {
         throw 'emailAlreadyInUse';
       }
-      if (err.message && (err.message.includes('invalidFormat') || err.message.includes('The phone number format is invalid'))) {
-        throw { invalidPhoneFormat: 'Le format du numéro de téléphone est invalide.' };
+      if (err.message) {
+        if (err.message.includes('invalidFormat') || err.message.includes('The phone number format is invalid')) {
+          throw { invalidPhoneFormat: 'Le format du numéro de téléphone est invalide.' };
+        }
+        if (err.message.includes('Le mot de passe doit contenir') || (err.invalid && err.invalid.includes('Le mot de passe'))) {
+          const msg = err.invalid || err.message;
+          if (msg.includes('Le mot de passe doit contenir')) {
+            throw { passwordFormatInvalid: msg.includes('Error: ') ? msg.split('Error: ')[1] : msg };
+          }
+        }
+        if (err.raw && err.raw.invalid) {
+          throw { passwordFormatInvalid: err.raw.invalid };
+        }
       }
+
+      if (err.invalid) {
+        throw { passwordFormatInvalid: err.invalid };
+      }
+
       throw err;
     }
 

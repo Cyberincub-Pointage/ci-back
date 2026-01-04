@@ -35,12 +35,16 @@ module.exports = {
     },
     invalidToken: {
       description: 'Le jeton est invalide ou expiré.',
-      responseType: 'badRequest'
+      statusCode: 400
     },
     emailAlreadyInUse: {
       statusCode: 409,
       description: 'L\'email fourni est déjà utilisé.',
     },
+    passwordFormatInvalid: {
+      statusCode: 400,
+      description: 'Le format du mot de passe est invalide.'
+    }
   },
 
   fn: async function ({ token, password, nom, prenom, telephone, specialite }) {
@@ -50,26 +54,44 @@ module.exports = {
     });
 
     if (!formateur) {
-      throw 'invalidToken';
+      throw { invalidToken: 'Le jeton d\'invitation est invalide ou expiré.' };
     }
 
     // Vérifier l'expiration du jeton
     if (formateur.invitationTokenExpiresAt < Date.now()) {
-      throw 'invalidToken';
+      throw { invalidToken: 'Le jeton d\'invitation est invalide ou expiré.' };
     }
 
     // Mettre à jour le Formateur
-    await Formateur.updateOne({ id: formateur.id })
-      .set({
-        password: password,
-        nom,
-        prenom,
-        photoUrl,
-        specialite,
-        status: 'active',
-        invitationToken: '',
-        invitationTokenExpiresAt: 0,
-      });
+    try {
+      await Formateur.updateOne({ id: formateur.id })
+        .set({
+          password: password,
+          nom,
+          prenom,
+          specialite,
+          status: 'active',
+          invitationToken: '',
+          invitationTokenExpiresAt: 0,
+        });
+    } catch (err) {
+      if (err.message) {
+        if (err.message.includes('Le mot de passe doit contenir') || (err.invalid && err.invalid.includes('Le mot de passe'))) {
+          const msg = err.invalid || err.message;
+          if (msg.includes('Le mot de passe doit contenir')) {
+            throw { passwordFormatInvalid: msg.includes('Error: ') ? msg.split('Error: ')[1] : msg };
+          }
+        }
+        if (err.raw && err.raw.invalid) {
+          throw { passwordFormatInvalid: err.raw.invalid };
+        }
+      }
+
+      if (err.invalid) {
+        throw { passwordFormatInvalid: err.invalid };
+      }
+      throw err;
+    }
 
     // Générer le JWT pour la connexion automatique
     const jwtToken = await sails.helpers.generateJwt({

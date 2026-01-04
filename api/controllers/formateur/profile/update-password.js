@@ -19,7 +19,11 @@ module.exports = {
     },
     badCombo: {
       description: 'Mot de passe actuel incorrect.',
-      responseType: 'unauthorized'
+      statusCode: 401
+    },
+    passwordFormatInvalid: {
+      statusCode: 400,
+      description: 'Le format du mot de passe est invalide.'
     }
   },
 
@@ -27,12 +31,31 @@ module.exports = {
     const bcrypt = require('bcryptjs');
     const formateur = await Formateur.findOne({ id: this.req.me.id });
 
-    if (!formateur) { throw 'badCombo'; }
+    if (!formateur) { throw { badCombo: 'Utilisateur introuvable.' }; }
 
     const passwordsMatch = await bcrypt.compare(currentPassword, formateur.password);
-    if (!passwordsMatch) { throw 'badCombo'; }
+    if (!passwordsMatch) { throw { badCombo: 'Mot de passe actuel incorrect.' }; }
 
-    await Formateur.updateOne({ id: this.req.me.id }).set({ password: newPassword });
+    try {
+      await Formateur.updateOne({ id: this.req.me.id }).set({ password: newPassword });
+    } catch (err) {
+      if (err.message) {
+        if (err.message.includes('Le mot de passe doit contenir') || (err.invalid && err.invalid.includes('Le mot de passe'))) {
+          const msg = err.invalid || err.message;
+          if (msg.includes('Le mot de passe doit contenir')) {
+            throw { passwordFormatInvalid: msg.includes('Error: ') ? msg.split('Error: ')[1] : msg };
+          }
+        }
+        if (err.raw && err.raw.invalid) {
+          throw { passwordFormatInvalid: err.raw.invalid };
+        }
+      }
+
+      if (err.invalid) {
+        throw { passwordFormatInvalid: err.invalid };
+      }
+      throw err;
+    }
 
     // Notifier le formateur
     await sails.helpers.sender.notification.with({

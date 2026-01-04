@@ -38,7 +38,7 @@ module.exports = {
     const invitationToken = crypto.randomBytes(32).toString('hex');
     const invitationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 heures
 
-    // Générer un mot de passe temporaire aléatoire (sera modifié par l'utilisateur)
+    // Générer un mot de passe temporaire aléatoire
     const randomPassword = crypto.randomBytes(10).toString('hex');
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
