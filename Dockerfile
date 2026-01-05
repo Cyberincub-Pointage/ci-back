@@ -1,15 +1,20 @@
-# bashCopy code
-# Use the official Node.js image as the base image
+# Utilise l'image officielle Node.js
 FROM node:18
 
-# Set the working directory in the container
+# Définir le répertoire de travail dans le container
 WORKDIR /app
 
-# Copy the application files into the working directory
+# Copier les fichiers de l'application
 COPY . /app
 
-# Install the application dependencies
+# Installer les dépendances
 RUN npm install
 
-# Define the entry point for the container
+# Exposer le port sur lequel l'application Sails.js écoute
+EXPOSE 1337
+
+# Définir le port via la variable d'environnement (Back4App injecte PORT)
+ENV PORT=1337
+
+# Définir le point d'entrée du container
 CMD ["npm", "start"]
