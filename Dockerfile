@@ -1,20 +1,21 @@
-# Utilise l'image officielle Node.js
+# 1️⃣ Image officielle Node.js
 FROM node:18
 
-# Définir le répertoire de travail dans le container
+# 2️⃣ Définit le répertoire de travail dans le container
 WORKDIR /app
 
-# Copier les fichiers de l'application
-COPY . /app
+# 3️⃣ Copie uniquement les fichiers nécessaires pour installer les dépendances
+COPY package*.json ./
 
-# Installer les dépendances
-RUN npm install
+# 4️⃣ Installe les dépendances
+RUN npm install --production
 
-# Exposer le port sur lequel l'application Sails.js écoute
+# 5️⃣ Copie tout le reste du projet
+COPY . .
+
+# 6️⃣ Expose le port attendu par Back4App
+ENV PORT=1337
 EXPOSE 1337
 
-# Définir le port via la variable d'environnement (Back4App injecte PORT)
-ENV PORT=1337
-
-# Définir le point d'entrée du container
-CMD ["npm", "start"]
+# 7️⃣ Commande de démarrage adaptée à Sails.js
+CMD ["node", "app.js"]
