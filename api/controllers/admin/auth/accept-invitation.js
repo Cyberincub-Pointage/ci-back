@@ -73,12 +73,29 @@ module.exports = {
         });
     } catch (err) {
       if (err.message) {
-        if (err.message.includes('Le mot de passe doit contenir') || (err.invalid && err.invalid.includes('Le mot de passe'))) {
-          const msg = err.invalid || err.message;
-          if (msg.includes('Le mot de passe doit contenir')) {
-            throw { passwordFormatInvalid: msg.includes('Error: ') ? msg.split('Error: ')[1] : msg };
+        if (err.message.includes('validatePassword') || err.message.includes('Le mot de passe') || err.message.includes('password')) {
+          let cleanMsg = '';
+
+          if (err.message.includes("Additional data: '")) {
+            const parts = err.message.split("Additional data: '");
+            if (parts[1]) {
+              cleanMsg = parts[1].split("'")[0];
+            }
+          }
+
+          if (!cleanMsg && err.message.includes('Le mot de passe doit contenir')) {
+            cleanMsg = 'Le mot de passe doit contenir au moins 12 caractères, avec 2 majuscules, 2 minuscules, 2 chiffres et 2 caractères spéciaux.';
+          }
+
+          if (!cleanMsg && (err.invalid && err.invalid.includes('Le mot de passe'))) {
+            cleanMsg = err.invalid;
+          }
+
+          if (cleanMsg) {
+            throw { passwordFormatInvalid: cleanMsg };
           }
         }
+
         if (err.raw && err.raw.invalid) {
           throw { passwordFormatInvalid: err.raw.invalid };
         }
@@ -87,6 +104,11 @@ module.exports = {
       if (err.invalid) {
         throw { passwordFormatInvalid: err.invalid };
       }
+
+      if (err.code === 'E_INVALID_NEW_RECORD') {
+        throw { passwordFormatInvalid: "Le mot de passe doit contenir au moins 12 caractères, avec 2 majuscules, 2 minuscules, 2 chiffres et 2 caractères spéciaux. (Erreur interne)" };
+      }
+
       throw err;
     }
 

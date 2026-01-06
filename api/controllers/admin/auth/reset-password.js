@@ -45,12 +45,25 @@ module.exports = {
       });
     } catch (err) {
       if (err.message) {
-        if (err.message.includes('Le mot de passe doit contenir') || (err.invalid && err.invalid.includes('Le mot de passe'))) {
-          const msg = err.invalid || err.message;
-          if (msg.includes('Le mot de passe doit contenir')) {
-            throw { passwordFormatInvalid: msg.includes('Error: ') ? msg.split('Error: ')[1] : msg };
+        if (err.message.includes('validatePassword') || err.message.includes('Le mot de passe')) {
+          let cleanMsg = '';
+
+          if (err.message.includes("Additional data: '")) {
+            const parts = err.message.split("Additional data: '");
+            if (parts[1]) {
+              cleanMsg = parts[1].split("'")[0];
+            }
+          }
+
+          if (!cleanMsg && err.message.includes('Le mot de passe doit contenir')) {
+            cleanMsg = 'Le mot de passe doit contenir au moins 12 caractères, avec 2 majuscules, 2 minuscules, 2 chiffres et 2 caractères spéciaux.';
+          }
+
+          if (cleanMsg) {
+            throw { passwordFormatInvalid: cleanMsg };
           }
         }
+
         if (err.raw && err.raw.invalid) {
           throw { passwordFormatInvalid: err.raw.invalid };
         }
@@ -62,7 +75,7 @@ module.exports = {
       throw err;
     }
 
-    // Notify admin
+    // Notifier admin
     await sails.helpers.sender.notification.with({
       recipientId: admin.id,
       model: 'admin',

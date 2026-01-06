@@ -1,14 +1,14 @@
 module.exports = {
-  friendlyName: 'Home',
-  description: 'Home page of the application.',
-  inputs: {},
-  exits: {
-    success: {
-      description: 'Home page served'
-    }
-  },
-  fn: async function (inputs) {
-    const html = `
+    friendlyName: 'Home',
+    description: 'Home page of the application.',
+    inputs: {},
+    exits: {
+        success: {
+            description: 'Home page served'
+        }
+    },
+    fn: async function (inputs) {
+        const html = `
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -76,7 +76,7 @@ module.exports = {
         <h1>Bienvenue sur l'API CYBERINCUB</h1>
         <p>
             Cette API gère le système de pointage et de gestion pour Cyberincub. 
-            Vous pouvez accéder à toutes les fonctionnalités via nos endpoints sécurisés.
+            Vous pouvez accéder à toutes les fonctionnalités via les endpoints sécurisés.
         </p>
         
         <div class="note">
@@ -84,7 +84,7 @@ module.exports = {
             Veuillez consulter la documentation pour obtenir les détails sur les endpoints disponibles et les méthodes d'authentification.
         </div>
 
-        <a href="/api/v1/docs" class="btn">Accéder à la Documentation SWAGGER</a>
+        <a href="/api/v1/docs" class="btn">Accéder à la documentation</a>
 
         <footer>
             &copy; ${new Date().getFullYear()} Cyberincub. Tous droits réservés.
@@ -93,6 +93,6 @@ module.exports = {
 </body>
 </html>
     `;
-    this.res.send(html);
-  }
+        this.res.send(html);
+    }
 };

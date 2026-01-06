@@ -34,7 +34,7 @@ module.exports = {
       throw 'invalidFormat';
     }
 
-    // Nous ajoutons strictement +229 devant.
+    // +229 stricte
     const formattedNumber = `+229${match[1]}`;
 
     return formattedNumber;

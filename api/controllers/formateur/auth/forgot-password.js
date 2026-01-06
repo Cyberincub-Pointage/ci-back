@@ -42,7 +42,7 @@ module.exports = {
         appSlug: 'ci',
         templateData: {
           firstName: formateur.prenom,
-          resetLink: `${appUrls}/auth/reset-password?token=${passwordResetToken}`,
+          resetLink: `${appUrls}/auth/reset-password-form?token=${passwordResetToken}`,
           expirationDelay: '1 heure'
         }
       });
