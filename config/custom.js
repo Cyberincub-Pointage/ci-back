@@ -47,9 +47,8 @@ module.exports.custom = {
   },
 
   presenceZone: {
-    latitude: 6.497475511141847,
-    longitude: 2.6637200356102406,
+    latitude: 6.4373803,
+    longitude: 2.3401794,
     radius: 100
   },
-
 };
