@@ -114,10 +114,18 @@ module.exports = {
         // Determine base URL based on environment
         const envUrl = process.env.NODE_ENV === 'production' ? appConfig.urls.prod : appConfig.urls.dev;
 
+        // Lire les logos depuis le système de fichiers et les préparer en tant que CID attachments
+        const logoDeskPath = path.join(sails.config.appPath, 'assets', appConfig.logos.desktop);
+        const logoMobPath = path.join(sails.config.appPath, 'assets', appConfig.logos.mobile);
+
+        // Vérifier si les fichiers existent et créer les CID references
+        const logoDeskExists = fs.existsSync(logoDeskPath);
+        const logoMobExists = fs.existsSync(logoMobPath);
+
         const combinedTemplateData = {
           ...inputs.templateData,
-          logoDesk: `${envUrl}/${appConfig.logos.desktop.replace(/^assets\/|^\//, '')}`,
-          logoMob: `${envUrl}/${appConfig.logos.mobile.replace(/^assets\/|^\//, '')}`,
+          logoDesk: logoDeskExists ? 'cid:logo-desk' : null,
+          logoMob: logoMobExists ? 'cid:logo-mob' : null,
           appName: appConfig.name,
           baseUrl: envUrl
         };
@@ -148,7 +156,31 @@ module.exports = {
         subject: inputs.subject,
         html: emailHtmlContent,
         text: emailTextContent,
+        attachments: []
       };
+
+      // Ajouter les logos en tant que pièces jointes embarquées si ils existent
+      if (inputs.template) {
+        const appConfig = sails.config.custom.appConfig[inputs.appSlug];
+        const logoDeskPath = path.join(sails.config.appPath, 'assets', appConfig.logos.desktop);
+        const logoMobPath = path.join(sails.config.appPath, 'assets', appConfig.logos.mobile);
+
+        if (fs.existsSync(logoDeskPath)) {
+          mailOptions.attachments.push({
+            filename: 'logo-desk.jpg',
+            path: logoDeskPath,
+            cid: 'logo-desk'
+          });
+        }
+
+        if (fs.existsSync(logoMobPath)) {
+          mailOptions.attachments.push({
+            filename: 'logo-mob.jpg',
+            path: logoMobPath,
+            cid: 'logo-mob'
+          });
+        }
+      }
 
       await transporter.sendMail(mailOptions);
       sails.log.info(`Email envoyé à ${inputs.to} avec l'objet: ${inputs.subject}`);

@@ -34,10 +34,10 @@ module.exports.custom = {
   // Configuration par application
   appConfig: {
     ci: {
-      name: 'PRO GESTION SOFT',
+      name: 'CYBER INCUB POINTAGE',
       logos: {
-        desktop: 'assets/img/logo-desk.jpg',
-        mobile: 'assets/img/logo-mob.jpg',
+        desktop: 'img/logo-desk.png',
+        mobile: 'img/logo-mob.png',
       },
       urls: {
         prod: process.env.PROD_URL,
