@@ -8,7 +8,7 @@ module.exports = {
     swagger: { tags: ['SWAGGER DOCUMENTATION'] }
   },
   'GET /': {
-    action: 'home',
+    action: 'docs/home',
     swagger: { tags: ['SWAGGER DOCUMENTATION'] }
   },
 };
