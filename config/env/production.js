@@ -12,7 +12,7 @@ module.exports = {
   },
 
   security: {
-    // cors: {},
+    cors: {},
 
   },
 
