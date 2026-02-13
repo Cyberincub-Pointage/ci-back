@@ -1,6 +1,6 @@
 const path = require('path');
 const ejs = require('ejs');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const fs = require('fs');
 
 module.exports = {
@@ -80,61 +80,44 @@ module.exports = {
 
   fn: async function (inputs, exits) {
     try {
+      const resend = new Resend(sails.config.custom.resendApiKey);
+
       let emailHtmlContent;
       let emailTextContent = inputs.textBody || inputs.subject;
 
       // Récupérer la configuration de l'application
       const appConfig = sails.config.custom.appConfig[inputs.appSlug];
-      if (!appConfig) {
-        return exits.invalidAppSlug({
-          message: `Le slug d'application "${inputs.appSlug}" est introuvable dans la configuration.`
-        });
-      }
+      if (!appConfig) return exits.invalidAppSlug();
 
-      // Vérifier si un template est utilisé ou si htmlBody/textBody sont fournis directement
       if (inputs.template) {
-        const emailTemplatesPath = path.join(sails.config.appPath, 'views', 'emails');
-        const templatePath = path.join(emailTemplatesPath, 'contents', `${inputs.template}.ejs`);
-        const layoutPath = path.join(emailTemplatesPath, 'layouts', `${inputs.layout}.ejs`);
+        const basePath = path.join(sails.config.appPath, 'views', 'emails');
+        const templatePath = path.join(basePath, 'contents', `${inputs.template}.ejs`);
+        const layoutPath = path.join(basePath, 'layouts', `${inputs.layout}.ejs`);
 
-        // Vérifier si le template de contenu existe
-        if (!fs.existsSync(templatePath)) {
-          return exits.templateNotFound({
-            message: `Le template d'e-mail "${inputs.template}.ejs" est introuvable dans ${path.join('views', 'emails', 'contents')}.`
-          });
-        }
+        if (!fs.existsSync(templatePath)) return exits.templateNotFound();
+        if (!fs.existsSync(layoutPath)) return exits.layoutNotFound();
 
-        // Vérifier si le layout existe
-        if (!fs.existsSync(layoutPath)) {
-          return exits.layoutNotFound({
-            message: `Le layout d'e-mail "${inputs.layout}.ejs" est introuvable dans ${path.join('views', 'emails', 'layouts')}.`
-          });
-        }
-
-        // Determine base URL based on environment
-        const envUrl = process.env.NODE_ENV === 'production' ? appConfig.urls.prod : appConfig.urls.dev;
+        const envUrl = process.env.NODE_ENV === 'production'
+          ? appConfig.urls.prod
+          : appConfig.urls.dev;
 
         // Lire les logos depuis le système de fichiers et les préparer en tant que CID attachments
         const logoDeskPath = path.join(sails.config.appPath, 'assets', appConfig.logos.desktop);
         const logoMobPath = path.join(sails.config.appPath, 'assets', appConfig.logos.mobile);
 
-        // Vérifier si les fichiers existent et créer les CID references
-        const logoDeskExists = fs.existsSync(logoDeskPath);
-        const logoMobExists = fs.existsSync(logoMobPath);
-
         const combinedTemplateData = {
           ...inputs.templateData,
-          logoDesk: logoDeskExists ? 'cid:logo-desk' : null,
-          logoMob: logoMobExists ? 'cid:logo-mob' : null,
+          logoDesk: fs.existsSync(logoDeskPath) ? 'cid:logo-desk' : null,
+          logoMob: fs.existsSync(logoMobPath) ? 'cid:logo-mob' : null,
           appName: appConfig.name,
           baseUrl: envUrl
         };
 
-        // Rendre le corps de l'e-mail
-        const emailBodyHtml = await ejs.renderFile(templatePath, combinedTemplateData, { async: true });
+        const bodyHtml = await ejs.renderFile(templatePath, combinedTemplateData, { async: true });
+
         emailHtmlContent = await ejs.renderFile(layoutPath, {
           ...combinedTemplateData,
-          bodyContent: emailBodyHtml
+          bodyContent: bodyHtml
         }, { async: true });
 
         // Si le template est utilisé, généré le contenu texte à partir du sujet
@@ -144,7 +127,7 @@ module.exports = {
         emailHtmlContent = inputs.htmlBody;
         emailTextContent = inputs.textBody || inputs.htmlBody;
       } else {
-        return exits.missingContent({ message: 'Aucun contenu d\'e-mail ou template spécifié.' });
+        return exits.missingContent();
       }
 
       // Rendre le layout complet avec le corps de l'e-mail
@@ -161,12 +144,11 @@ module.exports = {
 
       // Ajouter les logos en tant que pièces jointes embarquées si ils existent
       if (inputs.template) {
-        const appConfig = sails.config.custom.appConfig[inputs.appSlug];
         const logoDeskPath = path.join(sails.config.appPath, 'assets', appConfig.logos.desktop);
         const logoMobPath = path.join(sails.config.appPath, 'assets', appConfig.logos.mobile);
 
         if (fs.existsSync(logoDeskPath)) {
-          mailOptions.attachments.push({
+          attachments.push({
             filename: 'logo-desk.png',
             path: logoDeskPath,
             cid: 'logo-desk'
@@ -174,7 +156,7 @@ module.exports = {
         }
 
         if (fs.existsSync(logoMobPath)) {
-          mailOptions.attachments.push({
+          attachments.push({
             filename: 'logo-mob.png',
             path: logoMobPath,
             cid: 'logo-mob'
@@ -182,12 +164,20 @@ module.exports = {
         }
       }
 
-      await transporter.sendMail(mailOptions);
-      sails.log.info(`Email envoyé à ${inputs.to} avec l'objet: ${inputs.subject}`);
+      await resend.emails.send({
+        from: inputs.from,
+        to: inputs.to,
+        subject: inputs.subject,
+        html: emailHtmlContent,
+        text: emailTextContent,
+        attachments
+      });
+
+      sails.log.info(`Email envoyé à ${inputs.to} : ${inputs.subject}`);
       return exits.success();
 
     } catch (err) {
-      sails.log.error(`Erreur lors de l\'envoi de l'email ${inputs.to} avec l'objet: ${inputs.subject}`, err);
+      sails.log.error('Erreur envoi email:', err);
       return exits.error(err);
     }
   }

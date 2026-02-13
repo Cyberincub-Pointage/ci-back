@@ -22,3 +22,6 @@ lib-cov
 *.pid
 
 swagger/swagger.json
+
+# Custom
+BD/
