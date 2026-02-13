@@ -130,17 +130,8 @@ module.exports = {
         return exits.missingContent();
       }
 
-      // Rendre le layout complet avec le corps de l'e-mail
-      const transporter = nodemailer.createTransport(sails.config.custom.emailService);
-
-      const mailOptions = {
-        from: inputs.from,
-        to: inputs.to,
-        subject: inputs.subject,
-        html: emailHtmlContent,
-        text: emailTextContent,
-        attachments: []
-      };
+      // Envoi de l'e-mail via Resend
+      const attachments = [];
 
       // Ajouter les logos en tant que pièces jointes embarquées si ils existent
       if (inputs.template) {
@@ -150,16 +141,14 @@ module.exports = {
         if (fs.existsSync(logoDeskPath)) {
           attachments.push({
             filename: 'logo-desk.png',
-            path: logoDeskPath,
-            cid: 'logo-desk'
+            content: fs.readFileSync(logoDeskPath),
           });
         }
 
         if (fs.existsSync(logoMobPath)) {
           attachments.push({
             filename: 'logo-mob.png',
-            path: logoMobPath,
-            cid: 'logo-mob'
+            content: fs.readFileSync(logoMobPath),
           });
         }
       }
@@ -170,7 +159,7 @@ module.exports = {
         subject: inputs.subject,
         html: emailHtmlContent,
         text: emailTextContent,
-        attachments
+        attachments: attachments.length > 0 ? attachments : undefined
       });
 
       sails.log.info(`Email envoyé à ${inputs.to} : ${inputs.subject}`);
