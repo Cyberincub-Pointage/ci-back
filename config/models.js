@@ -1,6 +1,6 @@
 module.exports.models = {
 
-  migrate: 'safe',
+  migrate: 'alter',
   attributes: {
     createdAt: {
       type: 'number',
