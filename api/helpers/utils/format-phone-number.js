@@ -25,7 +25,7 @@ module.exports = {
     // Supprimer les espaces
     const cleanedNumber = phoneNumber.replace(/\s+/g, '');
 
-    // ^(?:\+229)? : Préfixe optionnel +229 (groupe non capturant)
+    // ^(?:\+229)? : Préfixe optionnel +229
     // (01\d{8})$ : 01 obligatoire suivi de exactement 8 chiffres. Ce groupe est capturé.
     const regex = /^(?:\+229)?(01\d{8})$/;
     const match = cleanedNumber.match(regex);
