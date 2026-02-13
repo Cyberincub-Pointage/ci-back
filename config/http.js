@@ -2,7 +2,6 @@ module.exports.http = {
   middleware: {
     order: [
       'cookieParser',
-      'cors',
       'session',
       'bodyParser',
       'compress',
