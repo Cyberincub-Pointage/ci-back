@@ -8,6 +8,7 @@ module.exports.security = {
       ? [
         'https://cyberincub.com',
         'https://www.cyberincub.com',
+        'https://cyberincub.netlify.app',
         'https://cyberincub-staging.netlify.app'
       ]
       : [
