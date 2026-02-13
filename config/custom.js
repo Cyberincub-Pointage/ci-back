@@ -13,19 +13,19 @@ module.exports.custom = {
   emailSender: process.env.SMTP_FROM,
   emailService: {
     host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT || 587,
+    port: parseInt(process.env.SMTP_PORT) || 465,
     secure: process.env.SMTP_SECURE === 'true',
-    requireTLS: true,
+
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
     tls: {
-      rejectUnauthorized: false,
-      minVersion: 'TLSv1.2'
+      rejectUnauthorized: false
+
     },
-    debug: process.env.NODE_ENV !== 'production',
-    logger: process.env.NODE_ENV !== 'production',
+
+
   },
 
 

@@ -167,7 +167,7 @@ module.exports = {
 
         if (fs.existsSync(logoDeskPath)) {
           mailOptions.attachments.push({
-            filename: 'logo-desk.jpg',
+            filename: 'logo-desk.png',
             path: logoDeskPath,
             cid: 'logo-desk'
           });
@@ -175,7 +175,7 @@ module.exports = {
 
         if (fs.existsSync(logoMobPath)) {
           mailOptions.attachments.push({
-            filename: 'logo-mob.jpg',
+            filename: 'logo-mob.png',
             path: logoMobPath,
             cid: 'logo-mob'
           });
