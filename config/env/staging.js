@@ -4,7 +4,7 @@ module.exports = {
   },
 
   models: {
-    migrate: 'safe',
+    migrate: 'alter',
   },
 
   blueprints: {
@@ -13,19 +13,12 @@ module.exports = {
 
   security: {
     cors: {},
-
   },
 
   session: {
     cookie: {
-      // secure: true,
-      maxAge: 24 * 60 * 60 * 1000,  // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
     },
-
-  },
-
-  sockets: {
-    onlyAllowOrigins: ['https://ci-back-staging.onrender.com'],
   },
 
   log: {
@@ -33,7 +26,7 @@ module.exports = {
   },
 
   http: {
-    cache: 365.25 * 24 * 60 * 60 * 1000, // One year
+    cache: 365.25 * 24 * 60 * 60 * 1000,
   },
 
   custom: {},
